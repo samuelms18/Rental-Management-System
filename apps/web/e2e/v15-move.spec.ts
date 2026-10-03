@@ -21,7 +21,7 @@ test.beforeAll(async ({ browser }) => {
 
 test('manager records move-out, meter reading, photos and deductions', async () => {
   await manager.goto(`/owner/tenancies/${T}/move-out`);
-  await manager.locator('input[name=move_out_date]').fill(new Date().toISOString().slice(0, 10));
+  await manager.locator('input[name=move_out_date]').fill(today);
   await manager.locator('textarea[name=inspection_notes]').fill('Wall paint marks in bedroom; tap loose');
   await manager.locator('form:has(textarea[name=inspection_notes]) button[type=submit]').click();
   await expect(manager.getByText('Saved').first()).toBeVisible();
