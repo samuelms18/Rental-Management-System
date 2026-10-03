@@ -20,8 +20,8 @@ export function LanguagePicker() {
           type="button"
           onClick={() => start(async () => { await setLanguage(l); router.refresh(); })}
           className={cn(
-            'min-h-11 rounded-full border px-4 text-sm',
-            l === current ? 'border-primary bg-primary-soft text-primary' : 'border-border bg-surface',
+            'min-h-11 rounded-full border px-4 text-sm font-medium transition-colors',
+            l === current ? 'border-primary bg-primary text-primary-fg shadow-card' : 'border-border bg-surface hover:border-primary/40',
           )}
           lang={l}
         >

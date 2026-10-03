@@ -69,7 +69,7 @@ function FormMessage() {
   const formError = state.errors?._form;
   if (formError) {
     return (
-      <div role="alert" className="rounded-xl bg-danger-soft px-3 py-2 text-sm text-danger">
+      <div role="alert" className="rounded-2xl border border-danger/20 bg-danger-soft px-4 py-3 text-sm font-medium text-danger">
         {t.has(`errors.${formError}`) ? t(`errors.${formError}`) : t('errors.generic')}
         {state.detail && <div className="mt-1 text-xs opacity-80">{state.detail}</div>}
       </div>
@@ -77,7 +77,7 @@ function FormMessage() {
   }
   if (state.ok && state.message) {
     return (
-      <div role="status" className="rounded-xl bg-ok-soft px-3 py-2 text-sm text-ok">
+      <div role="status" className="rounded-2xl border border-ok/20 bg-ok-soft px-4 py-3 text-sm font-medium text-ok">
         {t(state.message, state.messageValues)}
       </div>
     );
@@ -102,7 +102,7 @@ export function Field({
   const t = useTranslations();
   return (
     <div className="space-y-1.5">
-      <label htmlFor={name} className="block text-sm font-medium">
+      <label htmlFor={name} className="block text-sm font-semibold">
         {label}
         {optional && <span className="ml-1 font-normal text-muted">({t('common.optional')})</span>}
       </label>
@@ -118,7 +118,7 @@ export function Field({
 }
 
 const inputClass =
-  'block w-full min-h-11 rounded-xl border border-border bg-surface px-3 py-2 text-fg placeholder:text-muted/70 focus:border-primary focus:outline-none aria-[invalid=true]:border-danger';
+  'block w-full min-h-12 rounded-2xl border border-border bg-surface px-4 py-2.5 text-fg shadow-[0_1px_0_rgb(0_0_0/0.02)] transition placeholder:text-muted/60 hover:border-primary/30 focus:border-primary focus:outline-none focus:ring-4 focus:ring-primary/15 aria-[invalid=true]:border-danger aria-[invalid=true]:ring-danger/15';
 
 export function Input({ name, className, ...props }: React.InputHTMLAttributes<HTMLInputElement> & { name: string }) {
   const error = useFieldError(name);
@@ -128,8 +128,8 @@ export function Input({ name, className, ...props }: React.InputHTMLAttributes<H
 export function MoneyInput(props: Omit<React.InputHTMLAttributes<HTMLInputElement>, 'type'> & { name: string }) {
   return (
     <div className="relative">
-      <span className="pointer-events-none absolute inset-y-0 left-3 flex items-center text-muted">₹</span>
-      <Input inputMode="decimal" autoComplete="off" className="pl-7" {...props} />
+      <span className="pointer-events-none absolute inset-y-0 left-4 flex items-center font-semibold text-muted">₹</span>
+      <Input inputMode="decimal" autoComplete="off" className="tabular pl-8" {...props} />
     </div>
   );
 }

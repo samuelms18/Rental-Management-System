@@ -9,11 +9,11 @@ export async function MoreMenu({ items, unread }: { items: NavItem[]; unread?: n
   return (
     <List>
       {items.map((i) => (
-        <Link key={i.href} href={i.href} className="flex min-h-14 items-center justify-between border-b border-border px-4 last:border-b-0 hover:bg-surface-2">
+        <Link key={i.href} href={i.href} className="group flex min-h-14 items-center justify-between border-b border-border/70 px-4 font-medium last:border-b-0 hover:bg-primary-soft/40">
           <span>{t(i.label)}</span>
           <span className="flex items-center gap-2">
-            {i.badge === 'unread' && !!unread && <span className="rounded-full bg-danger px-2 text-xs text-white">{unread}</span>}
-            <ChevronRight className="size-5 text-muted" />
+            {i.badge === 'unread' && !!unread && <span className="rounded-full bg-accent px-2 py-0.5 text-xs font-bold text-white">{unread}</span>}
+            <ChevronRight className="size-5 text-muted transition-transform group-hover:translate-x-0.5 group-hover:text-primary" />
           </span>
         </Link>
       ))}

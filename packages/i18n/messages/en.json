@@ -2,7 +2,11 @@
   "app": {
     "name": "Family Property Manager",
     "short": "FPM",
-    "offline": "You are offline. Connect to the internet to continue."
+    "offline": "You are offline. Connect to the internet to continue.",
+    "tagline": "Every house, tenant and rupee — in one calm place.",
+    "feature1": "Rent by UPI with instant receipts",
+    "feature2": "Agreements signed on the phone",
+    "feature3": "Complaints, EB bills and history"
   },
   "common": {
     "save": "Save",

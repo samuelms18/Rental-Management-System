@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { getLocale, getTranslations } from 'next-intl/server';
 import { addDays, formatDate, todayIST } from '@fpm/api';
 import { Badge, toneFor } from '@/components/ui/badge';
-import { Empty, List, ListLink, Section, Stat } from '@/components/ui/card';
+import { Empty, Hero, List, ListLink, Section } from '@/components/ui/card';
 import { Money } from '@/components/ui/money';
 import { PageHeader } from '@/components/ui/page-header';
 import { requireStaff } from '@/lib/auth';
@@ -30,18 +30,48 @@ export default async function OwnerDashboard() {
   const dbPct = u ? Math.round((u.db_bytes / 500e6) * 100) : 0;
   const storagePct = u ? Math.round((u.storage_bytes / 1e9) * 100) : 0;
   const d = data as unknown as Dashboard;
+  const pct = d.summary.rent_expected_paise ? Math.min(100, Math.round((d.summary.rent_collected_paise / d.summary.rent_expected_paise) * 100)) : 0;
   const nothing =
     !d.pending_payments.length && !d.overdue.length && !d.complaints.length && !d.due_soon.length && !d.ending.length;
 
   return (
     <>
       <PageHeader title={t('dashboard.title')} subtitle={profile.full_name} />
+      <Hero className="mb-7">
+        <div className="flex items-start justify-between gap-4">
+          <div>
+            <div className="text-xs font-bold uppercase tracking-[0.14em] text-hero-text/70">{t('dashboard.summary')} · {t('dashboard.rentCollected')}</div>
+            <div className="font-display tabular mt-2 text-[2.4rem] font-semibold leading-none sm:text-5xl">
+              <Money paise={d.summary.rent_collected_paise} />
+            </div>
+            <div className="mt-2 text-sm text-hero-text/80">
+              {t('dashboard.rentExpected')}: <Money paise={d.summary.rent_expected_paise} className="font-semibold text-hero-text" />
+            </div>
+          </div>
+          <div className="relative flex size-20 shrink-0 items-center justify-center rounded-full sm:size-24" style={{ background: `conic-gradient(var(--fpm-hero-text) ${pct * 3.6}deg, rgb(255 255 255 / 0.16) 0)` }}>
+            <div className="font-display tabular flex size-[66px] items-center justify-center rounded-full bg-[var(--fpm-hero-from)] text-lg font-semibold sm:size-20 sm:text-xl">{pct}%</div>
+          </div>
+        </div>
+        <div className="mt-6 grid grid-cols-2 gap-2 sm:grid-cols-4">
+          {[
+            [t('dashboard.rentPending'), <Money key="p" paise={d.summary.rent_pending_paise} />],
+            [t('dashboard.housesTotal'), d.summary.houses_total],
+            [t('dashboard.occupied'), d.summary.houses_occupied],
+            [t('dashboard.vacant'), d.summary.houses_vacant],
+          ].map(([label, value], i) => (
+            <div key={i} className="rounded-2xl bg-white/10 px-3 py-2.5 ring-1 ring-white/15 backdrop-blur-sm">
+              <div className="text-[11px] font-semibold uppercase tracking-wide text-hero-text/70">{label}</div>
+              <div className="font-display tabular mt-0.5 text-lg font-semibold">{value}</div>
+            </div>
+          ))}
+        </div>
+      </Hero>
       <div className="space-y-7">
         {(dbPct >= 80 || storagePct >= 80) && (
-          <p role="alert" className="rounded-xl bg-warn-soft p-3 text-sm text-warn">{t('dashboard.usageWarning', { db: dbPct, storage: storagePct })}</p>
+          <p role="alert" className="rounded-2xl border border-warn/25 bg-warn-soft p-4 text-sm font-medium text-warn">{t('dashboard.usageWarning', { db: dbPct, storage: storagePct })}</p>
         )}
         {!!failedJobs?.length && (
-          <p role="alert" className="rounded-xl bg-danger-soft p-3 text-sm text-danger">{t('dashboard.jobFailed', { jobs: [...new Set(failedJobs.map((j) => j.job))].join(', ') })}</p>
+          <p role="alert" className="rounded-2xl border border-danger/25 bg-danger-soft p-4 text-sm font-medium text-danger">{t('dashboard.jobFailed', { jobs: [...new Set(failedJobs.map((j) => j.job))].join(', ') })}</p>
         )}
         {nothing && <Empty>{t('dashboard.allClear')}</Empty>}
 
@@ -110,18 +140,6 @@ export default async function OwnerDashboard() {
           </Section>
         )}
 
-        <Section title={t('dashboard.summary')}>
-          <div className="grid grid-cols-3 gap-3">
-            <Stat label={t('dashboard.housesTotal')} value={d.summary.houses_total} />
-            <Stat label={t('dashboard.occupied')} value={d.summary.houses_occupied} tone="ok" />
-            <Stat label={t('dashboard.vacant')} value={d.summary.houses_vacant} tone={d.summary.houses_vacant ? 'warn' : undefined} />
-          </div>
-          <div className="grid grid-cols-3 gap-3">
-            <Stat label={t('dashboard.rentExpected')} value={<Money paise={d.summary.rent_expected_paise} />} />
-            <Stat label={t('dashboard.rentCollected')} value={<Money paise={d.summary.rent_collected_paise} />} tone="ok" />
-            <Stat label={t('dashboard.rentPending')} value={<Money paise={d.summary.rent_pending_paise} />} tone={d.summary.rent_pending_paise ? 'danger' : undefined} />
-          </div>
-        </Section>
       </div>
     </>
   );

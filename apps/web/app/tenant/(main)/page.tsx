@@ -2,8 +2,9 @@ import Link from 'next/link';
 import { getLocale, getTranslations } from 'next-intl/server';
 import { formatDate } from '@fpm/api';
 import { Badge, toneFor } from '@/components/ui/badge';
+import { CheckCircle2 } from 'lucide-react';
 import { LinkButton } from '@/components/ui/button';
-import { Card, Empty, List, ListLink, Section } from '@/components/ui/card';
+import { Card, Empty, Hero, List, ListLink, Section } from '@/components/ui/card';
 import { Money } from '@/components/ui/money';
 import { PageHeader } from '@/components/ui/page-header';
 import { requireTenant } from '@/lib/auth';
@@ -41,25 +42,32 @@ export default async function TenantHome() {
       />
       <div className="space-y-6">
         {tenancy.status === 'notice_period' && tenancy.actual_end_date && (
-          <Link href="/tenant/settlement" className="block rounded-xl bg-warn-soft p-3 text-sm text-warn">{t('tenantHome.notice', { date: formatDate(tenancy.actual_end_date, locale) })}</Link>
+          <Link href="/tenant/settlement" className="block rounded-2xl border border-warn/25 bg-warn-soft p-4 text-sm font-medium text-warn">{t('tenantHome.notice', { date: formatDate(tenancy.actual_end_date, locale) })}</Link>
         )}
-        <Card className="space-y-3">
-          <div className="text-sm text-muted">{t('tenantHome.rentDue')}</div>
+        <Hero className="space-y-4">
+          <div className="text-xs font-bold uppercase tracking-[0.14em] text-hero-text/70">{t('tenantHome.rentDue')}</div>
           {totalRent > 0 ? (
             <>
-              <div className="text-3xl font-semibold"><Money paise={totalRent} /></div>
-              {nextDue && <div className="text-sm text-muted">{t('pay.dueOn', { date: formatDate(nextDue, locale) })}</div>}
-              <LinkButton href="/tenant/rent" className="w-full">{t('tenantHome.payNow')}</LinkButton>
+              <div className="font-display tabular text-5xl font-semibold leading-none"><Money paise={totalRent} /></div>
+              {nextDue && <div className="text-sm text-hero-text/80">{t('pay.dueOn', { date: formatDate(nextDue, locale) })}</div>}
+              <Link
+                href="/tenant/rent"
+                className="flex min-h-12 w-full items-center justify-center gap-2 rounded-2xl bg-hero-text text-[15px] font-semibold text-[var(--fpm-hero-from)] shadow-card transition hover:brightness-105 active:scale-[0.98]"
+              >
+                {t('tenantHome.payNow')}
+              </Link>
             </>
           ) : (
-            <div className="text-lg font-medium text-ok">{t('tenantHome.allPaid')}</div>
+            <div className="font-display flex items-center gap-2 text-2xl font-semibold">
+              <CheckCircle2 className="size-7" /> {t('tenantHome.allPaid')}
+            </div>
           )}
-        </Card>
+        </Hero>
         {ebDue.length > 0 && (
           <Card className="flex items-center justify-between">
             <div>
               <div className="text-sm text-muted">{t('tenantHome.ebDue')}</div>
-              <div className="text-xl font-semibold"><Money paise={ebDue.reduce((n, c) => n + c.outstanding_paise, 0)} /></div>
+              <div className="font-display tabular text-2xl font-semibold"><Money paise={ebDue.reduce((n, c) => n + c.outstanding_paise, 0)} /></div>
             </div>
             <LinkButton href="/tenant/eb" variant="secondary" size="sm">{t('common.view')}</LinkButton>
           </Card>
@@ -77,7 +85,7 @@ export default async function TenantHome() {
           </Section>
         )}
         {!!unread && (
-          <Link href="/tenant/notifications" className="block rounded-card border border-border bg-surface p-4 text-sm">
+          <Link href="/tenant/notifications" className="block rounded-card border border-border bg-surface p-4 text-sm shadow-card transition hover:border-primary/40">
             {t('tenantHome.unread')}: <span className="font-semibold">{unread}</span>
           </Link>
         )}

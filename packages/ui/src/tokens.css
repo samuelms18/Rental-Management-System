@@ -1,36 +1,52 @@
-/* Family Property Manager design tokens. Warm, calm, high-contrast; works in light and dark. */
+/* Family Property Manager design tokens — "Chettinad modern".
+   Warm ivory paper, deep ink-teal, terracotta accent; high contrast in light and dark. */
 :root {
-  --fpm-bg: #f7f5f0;
-  --fpm-surface: #ffffff;
-  --fpm-surface-2: #f0ede6;
-  --fpm-border: #e2ddd2;
-  --fpm-text: #1d1b16;
-  --fpm-muted: #6b6558;
-  --fpm-primary: #1f5f4a;
+  --fpm-bg: #f5f1ea;
+  --fpm-surface: #fffdf9;
+  --fpm-surface-2: #efe9df;
+  --fpm-border: #e3dbcd;
+  --fpm-text: #191714;
+  --fpm-muted: #6d665a;
+  --fpm-primary: #0f4c45;
+  --fpm-primary-2: #16695f;
   --fpm-primary-fg: #ffffff;
-  --fpm-primary-soft: #e3efe9;
+  --fpm-primary-soft: #dfece8;
+  --fpm-accent: #c2512f;
+  --fpm-accent-soft: #f8e3da;
+  --fpm-hero-from: #0d3f3a;
+  --fpm-hero-to: #145c53;
+  --fpm-hero-text: #f6f1e7;
   --fpm-danger: #b42318;
-  --fpm-danger-soft: #fdecea;
-  --fpm-warn: #a15c07;
-  --fpm-warn-soft: #fdf3e1;
-  --fpm-ok: #1f7a3d;
-  --fpm-ok-soft: #e6f4ea;
+  --fpm-danger-soft: #fbe9e6;
+  --fpm-warn: #9a5a06;
+  --fpm-warn-soft: #fbf0dc;
+  --fpm-ok: #1d7a3e;
+  --fpm-ok-soft: #e3f3e8;
   --fpm-info: #1d4f91;
-  --fpm-info-soft: #e7eefa;
-  --fpm-radius: 14px;
+  --fpm-info-soft: #e6edf9;
+  --fpm-radius: 18px;
+  --fpm-shadow: 0 1px 2px rgb(40 30 15 / 0.05), 0 6px 20px -8px rgb(40 30 15 / 0.12);
+  --fpm-shadow-lg: 0 2px 6px rgb(40 30 15 / 0.06), 0 22px 44px -18px rgb(15 76 69 / 0.38);
+  --fpm-dot: rgb(25 23 20 / 0.07);
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --fpm-bg: #13130f;
-    --fpm-surface: #1c1b17;
-    --fpm-surface-2: #25241f;
-    --fpm-border: #34322b;
-    --fpm-text: #f1eee6;
-    --fpm-muted: #a8a294;
-    --fpm-primary: #5cb894;
-    --fpm-primary-fg: #0d1f18;
-    --fpm-primary-soft: #1d3329;
+    --fpm-bg: #0f1312;
+    --fpm-surface: #161b1a;
+    --fpm-surface-2: #1e2523;
+    --fpm-border: #2a3331;
+    --fpm-text: #f1ece2;
+    --fpm-muted: #a39d90;
+    --fpm-primary: #5fc2ae;
+    --fpm-primary-2: #7fd3c1;
+    --fpm-primary-fg: #06201c;
+    --fpm-primary-soft: #17312c;
+    --fpm-accent: #ec8a64;
+    --fpm-accent-soft: #3a2119;
+    --fpm-hero-from: #123d38;
+    --fpm-hero-to: #0c2a27;
+    --fpm-hero-text: #f1ece2;
     --fpm-danger: #f97066;
     --fpm-danger-soft: #3a1714;
     --fpm-warn: #f5b34a;
@@ -39,6 +55,9 @@
     --fpm-ok-soft: #16301f;
     --fpm-info: #84adf0;
     --fpm-info-soft: #172640;
+    --fpm-shadow: 0 1px 2px rgb(0 0 0 / 0.4), 0 8px 24px -12px rgb(0 0 0 / 0.6);
+    --fpm-shadow-lg: 0 2px 6px rgb(0 0 0 / 0.4), 0 22px 44px -18px rgb(0 0 0 / 0.75);
+    --fpm-dot: rgb(241 236 226 / 0.06);
   }
 }
 
@@ -46,12 +65,12 @@
 :root {
   --fpm-series-1: #2a78d6;
   --fpm-series-2: #eb6834;
-  --fpm-grid: #e6e3db;
+  --fpm-grid: #e6e0d5;
 }
 @media (prefers-color-scheme: dark) {
   :root {
     --fpm-series-1: #3987e5;
     --fpm-series-2: #d95926;
-    --fpm-grid: #2f2d27;
+    --fpm-grid: #2a3331;
   }
 }

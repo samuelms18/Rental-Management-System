@@ -9,8 +9,12 @@
   --color-fg: var(--fpm-text);
   --color-muted: var(--fpm-muted);
   --color-primary: var(--fpm-primary);
+  --color-primary-2: var(--fpm-primary-2);
   --color-primary-fg: var(--fpm-primary-fg);
   --color-primary-soft: var(--fpm-primary-soft);
+  --color-accent: var(--fpm-accent);
+  --color-accent-soft: var(--fpm-accent-soft);
+  --color-hero-text: var(--fpm-hero-text);
   --color-danger: var(--fpm-danger);
   --color-danger-soft: var(--fpm-danger-soft);
   --color-warn: var(--fpm-warn);
@@ -20,16 +24,24 @@
   --color-info: var(--fpm-info);
   --color-info-soft: var(--fpm-info-soft);
   --radius-card: var(--fpm-radius);
+  --shadow-card: var(--fpm-shadow);
+  --shadow-lift: var(--fpm-shadow-lg);
   --font-sans: var(--font-latin), var(--font-tamil), var(--font-devanagari), var(--font-malayalam), system-ui, sans-serif;
+  --font-display: var(--font-display-latin), var(--font-tamil), var(--font-devanagari), var(--font-malayalam), Georgia, serif;
 }
 
 html {
   -webkit-text-size-adjust: 100%;
 }
 body {
-  background: var(--fpm-bg);
+  background-color: var(--fpm-bg);
+  /* A faint kolam-style dot grid gives the paper some texture. */
+  background-image: radial-gradient(var(--fpm-dot) 1px, transparent 1.2px);
+  background-size: 22px 22px;
+  background-attachment: fixed;
   color: var(--fpm-text);
   font-family: var(--font-sans);
+  font-feature-settings: 'ss01', 'cv11';
   -webkit-tap-highlight-color: transparent;
 }
 input,
@@ -38,9 +50,67 @@ textarea {
   font-size: 16px; /* stops iOS zooming into fields */
 }
 :focus-visible {
-  outline: 3px solid var(--fpm-primary);
+  outline: 3px solid color-mix(in oklab, var(--fpm-primary) 55%, transparent);
   outline-offset: 2px;
 }
 .pb-safe {
   padding-bottom: calc(env(safe-area-inset-bottom) + 0.5rem);
+}
+.font-display {
+  font-family: var(--font-display);
+  font-optical-sizing: auto;
+  letter-spacing: -0.01em;
+}
+.tabular {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Hero panels: deep teal with a kolam dot lattice and a warm glow. */
+.hero {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  color: var(--fpm-hero-text);
+  background:
+    radial-gradient(120% 90% at 100% 0%, color-mix(in oklab, var(--fpm-accent) 38%, transparent) 0%, transparent 55%),
+    linear-gradient(140deg, var(--fpm-hero-from), var(--fpm-hero-to));
+  box-shadow: var(--fpm-shadow-lg);
+}
+.hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background-image:
+    radial-gradient(rgb(255 255 255 / 0.16) 1.2px, transparent 1.6px),
+    radial-gradient(rgb(255 255 255 / 0.07) 1.2px, transparent 1.6px);
+  background-size: 18px 18px, 18px 18px;
+  background-position: 0 0, 9px 9px;
+  mask-image: linear-gradient(200deg, #000 10%, transparent 75%);
+}
+.kolam-mark {
+  background-image: radial-gradient(currentColor 1.4px, transparent 1.8px);
+  background-size: 8px 8px;
+}
+
+/* One orchestrated entrance per page: children of [data-stagger] rise in turn. */
+@keyframes fpm-rise {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@media (prefers-reduced-motion: no-preference) {
+  [data-stagger] > * {
+    animation: fpm-rise 0.45s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  }
+  [data-stagger] > *:nth-child(2) { animation-delay: 50ms; }
+  [data-stagger] > *:nth-child(3) { animation-delay: 100ms; }
+  [data-stagger] > *:nth-child(4) { animation-delay: 150ms; }
+  [data-stagger] > *:nth-child(5) { animation-delay: 200ms; }
+  [data-stagger] > *:nth-child(n + 6) { animation-delay: 250ms; }
 }

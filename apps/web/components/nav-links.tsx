@@ -31,7 +31,7 @@ export function NavLinks({ items, variant, unread }: { items: NavItem[]; variant
 
   if (variant === 'bottom') {
     return (
-      <ul className="mx-auto grid max-w-md grid-cols-5">
+      <ul className="mx-auto grid max-w-md grid-cols-5 px-1 py-1">
         {items.map((i) => {
           const Icon = ICONS[i.icon];
           const active = isActive(i);
@@ -39,13 +39,16 @@ export function NavLinks({ items, variant, unread }: { items: NavItem[]; variant
             <li key={i.href}>
               <Link
                 href={i.href}
-                className={cn('flex min-h-14 flex-col items-center justify-center gap-0.5 text-[11px]', active ? 'text-primary' : 'text-muted')}
+                className={cn(
+                  'flex min-h-14 flex-col items-center justify-center gap-1 text-[11px] font-semibold transition-colors',
+                  active ? 'text-primary' : 'text-muted hover:text-fg',
+                )}
                 aria-current={active ? 'page' : undefined}
               >
-                <span className="relative">
-                  <Icon className="size-6" strokeWidth={active ? 2.4 : 1.8} />
+                <span className={cn('relative flex h-8 w-12 items-center justify-center rounded-full transition-colors', active && 'bg-primary-soft')}>
+                  <Icon className="size-[22px]" strokeWidth={active ? 2.3 : 1.8} />
                   {i.badge === 'unread' && !!unread && (
-                    <span className="absolute -right-2 -top-1 min-w-4 rounded-full bg-danger px-1 text-center text-[10px] leading-4 text-white">
+                    <span className="absolute -right-0.5 -top-0.5 min-w-4 rounded-full bg-accent px-1 text-center text-[10px] font-bold leading-4 text-white ring-2 ring-surface">
                       {unread > 9 ? '9+' : unread}
                     </span>
                   )}
@@ -60,7 +63,7 @@ export function NavLinks({ items, variant, unread }: { items: NavItem[]; variant
   }
 
   return (
-    <ul className="space-y-0.5">
+    <ul className="space-y-1">
       {items.map((i) => {
         const Icon = ICONS[i.icon];
         const active = isActive(i);
@@ -69,15 +72,17 @@ export function NavLinks({ items, variant, unread }: { items: NavItem[]; variant
             <Link
               href={i.href}
               className={cn(
-                'flex min-h-11 items-center gap-3 rounded-xl px-3 text-sm',
-                active ? 'bg-primary-soft font-medium text-primary' : 'text-fg hover:bg-surface-2',
+                'relative flex min-h-11 items-center gap-3 rounded-2xl px-3 text-[14px] transition-colors',
+                active
+                  ? 'bg-primary-soft font-semibold text-primary before:absolute before:-left-3 before:top-2 before:bottom-2 before:w-1 before:rounded-r-full before:bg-accent'
+                  : 'text-fg/80 hover:bg-surface-2 hover:text-fg',
               )}
               aria-current={active ? 'page' : undefined}
             >
-              <Icon className="size-5" />
+              <Icon className="size-[19px]" strokeWidth={active ? 2.2 : 1.8} />
               <span className="flex-1">{t(i.label)}</span>
               {i.badge === 'unread' && !!unread && (
-                <span className="rounded-full bg-danger px-1.5 text-xs text-white">{unread}</span>
+                <span className="rounded-full bg-accent px-2 py-0.5 text-[11px] font-bold leading-none text-white">{unread}</span>
               )}
             </Link>
           </li>
