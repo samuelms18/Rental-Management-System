@@ -17,7 +17,7 @@ function flatten(obj: unknown, prefix = ''): Map<string, string> {
 }
 
 const placeholders = (s: string) =>
-  [...s.matchAll(/\{(\w+)/g)].map((m) => m[1]).filter((p) => !['plural', 'one', 'other'].includes(p!)).sort();
+  [...s.matchAll(/\{(\w+)[},]/g)].map((m) => m[1]).filter((p) => !['plural', 'one', 'other'].includes(p!)).sort();
 
 const base = flatten(en);
 
