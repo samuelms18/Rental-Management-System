@@ -6,10 +6,18 @@ select tests.seed_world();
 -- ---------- Rent generation (run as the job does: postgres, fixed dates) ----------
 -- Tenancies started in December, so January is the first job-generated month.
 update public.tenancies set start_date = '2025-12-01' where id in (tests.w('tya'), tests.w('tyb'), tests.w('tyc'));
-select is(public.generate_rent_charges('2025-12-27'), 0, 'nothing generated more than 7 days before the 5th');
-select is(public.generate_rent_charges('2025-12-29'), 3, 'Jan charges created on 29 Dec (7 days before 5 Jan)');
-select is(public.generate_rent_charges('2025-12-29'), 0, 'running again creates nothing new (idempotent)');
-select is(public.generate_rent_charges('2025-12-30'), 0, 'next day also creates nothing new');
+-- Count only this test's tenancies (local seed data may exist alongside).
+create temp view world_charges as
+  select * from public.charges where tenancy_id in (tests.w('tya'), tests.w('tyb'), tests.w('tyc'));
+grant select on world_charges to authenticated;
+select public.generate_rent_charges('2025-12-27');
+select is((select count(*)::int from world_charges), 0, 'nothing generated more than 7 days before the 5th');
+select public.generate_rent_charges('2025-12-29');
+select is((select count(*)::int from world_charges), 3, 'Jan charges created on 29 Dec (7 days before 5 Jan)');
+select public.generate_rent_charges('2025-12-29');
+select is((select count(*)::int from world_charges), 3, 'running again creates nothing new (idempotent)');
+select public.generate_rent_charges('2025-12-30');
+select is((select count(*)::int from world_charges), 3, 'next day also creates nothing new');
 select is((select due_date from public.charges where tenancy_id = tests.w('tya')), '2026-01-05'::date, 'due on the 5th');
 select is((select amount_paise from public.charges where tenancy_id = tests.w('tya')), 1500000::bigint,
   'full month uses the rent revision in effect');
@@ -34,7 +42,8 @@ select is(
 select is((select status from public.houses where id = tests.w('b1')), 'occupied', 'activation marks the house occupied');
 
 -- ---------- Overdue ----------
-select is(public.mark_overdue('2026-01-06'), 3, 'unpaid charges past the due date become overdue');
+select public.mark_overdue('2026-01-06');
+select is((select count(*)::int from world_charges where status = 'overdue'), 3, 'unpaid charges past the due date become overdue');
 
 -- ---------- Tenant payment submission ----------
 select tests.login(tests.w('ua'));

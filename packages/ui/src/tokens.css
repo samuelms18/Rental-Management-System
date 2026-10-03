@@ -1,0 +1,43 @@
+/* Family Property Manager design tokens. Warm, calm, high-contrast; works in light and dark. */
+:root {
+  --fpm-bg: #f7f5f0;
+  --fpm-surface: #ffffff;
+  --fpm-surface-2: #f0ede6;
+  --fpm-border: #e2ddd2;
+  --fpm-text: #1d1b16;
+  --fpm-muted: #6b6558;
+  --fpm-primary: #1f5f4a;
+  --fpm-primary-fg: #ffffff;
+  --fpm-primary-soft: #e3efe9;
+  --fpm-danger: #b42318;
+  --fpm-danger-soft: #fdecea;
+  --fpm-warn: #a15c07;
+  --fpm-warn-soft: #fdf3e1;
+  --fpm-ok: #1f7a3d;
+  --fpm-ok-soft: #e6f4ea;
+  --fpm-info: #1d4f91;
+  --fpm-info-soft: #e7eefa;
+  --fpm-radius: 14px;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --fpm-bg: #13130f;
+    --fpm-surface: #1c1b17;
+    --fpm-surface-2: #25241f;
+    --fpm-border: #34322b;
+    --fpm-text: #f1eee6;
+    --fpm-muted: #a8a294;
+    --fpm-primary: #5cb894;
+    --fpm-primary-fg: #0d1f18;
+    --fpm-primary-soft: #1d3329;
+    --fpm-danger: #f97066;
+    --fpm-danger-soft: #3a1714;
+    --fpm-warn: #f5b34a;
+    --fpm-warn-soft: #36270f;
+    --fpm-ok: #6ccf8b;
+    --fpm-ok-soft: #16301f;
+    --fpm-info: #84adf0;
+    --fpm-info-soft: #172640;
+  }
+}

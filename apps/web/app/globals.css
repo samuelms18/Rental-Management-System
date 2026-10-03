@@ -1,0 +1,46 @@
+@import 'tailwindcss';
+@import '@fpm/ui/tokens.css';
+
+@theme inline {
+  --color-bg: var(--fpm-bg);
+  --color-surface: var(--fpm-surface);
+  --color-surface-2: var(--fpm-surface-2);
+  --color-border: var(--fpm-border);
+  --color-fg: var(--fpm-text);
+  --color-muted: var(--fpm-muted);
+  --color-primary: var(--fpm-primary);
+  --color-primary-fg: var(--fpm-primary-fg);
+  --color-primary-soft: var(--fpm-primary-soft);
+  --color-danger: var(--fpm-danger);
+  --color-danger-soft: var(--fpm-danger-soft);
+  --color-warn: var(--fpm-warn);
+  --color-warn-soft: var(--fpm-warn-soft);
+  --color-ok: var(--fpm-ok);
+  --color-ok-soft: var(--fpm-ok-soft);
+  --color-info: var(--fpm-info);
+  --color-info-soft: var(--fpm-info-soft);
+  --radius-card: var(--fpm-radius);
+  --font-sans: var(--font-latin), var(--font-tamil), var(--font-devanagari), var(--font-malayalam), system-ui, sans-serif;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+body {
+  background: var(--fpm-bg);
+  color: var(--fpm-text);
+  font-family: var(--font-sans);
+  -webkit-tap-highlight-color: transparent;
+}
+input,
+select,
+textarea {
+  font-size: 16px; /* stops iOS zooming into fields */
+}
+:focus-visible {
+  outline: 3px solid var(--fpm-primary);
+  outline-offset: 2px;
+}
+.pb-safe {
+  padding-bottom: calc(env(safe-area-inset-bottom) + 0.5rem);
+}

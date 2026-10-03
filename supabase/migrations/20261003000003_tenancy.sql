@@ -21,7 +21,7 @@ alter table public.tenants enable row level security;
 -- ---------------------------------------------------------------------------
 create table public.tenancies (
   id uuid primary key default gen_random_uuid(),
-  code text not null,
+  code text not null default '',
   house_id uuid not null references public.houses (id) on delete restrict,
   tenant_id uuid not null references public.tenants (id) on delete restrict,
   start_date date not null,

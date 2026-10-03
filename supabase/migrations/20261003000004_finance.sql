@@ -81,7 +81,7 @@ revoke execute on function public.tenancy_user_id(uuid) from public, anon, authe
 create table public.payee_settings (
   property_id uuid primary key references public.properties (id) on delete cascade,
   payee_name text not null,
-  upi_id text not null check (upi_id ~ '^[A-Za-z0-9._-]{2,256}@[A-Za-z0-9.-]{2,64}$'),
+  upi_id text not null check (upi_id ~ '^[A-Za-z0-9._-]{2,255}@[A-Za-z0-9.-]{2,64}$'),
   qr_path text,
   updated_by uuid references public.profiles (id) on delete set null default auth.uid(),
   updated_at timestamptz not null default now()
@@ -931,10 +931,12 @@ language sql
 immutable
 set search_path = ''
 as $$
-  select round(
+  -- Rounded to whole rupees (100 paise): nobody pays ₹9,354.84.
+  select (round(
     p_monthly::numeric * ((p_to - p_from) + 1)
     / extract(day from (date_trunc('month', p_from) + interval '1 month - 1 day'))::numeric
-  )::bigint;
+    / 100
+  ) * 100)::bigint;
 $$;
 
 -- First (pro-rated) month: created when the tenancy is activated, for new move-ins only.

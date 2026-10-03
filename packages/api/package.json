@@ -1,0 +1,10 @@
+{
+  "name": "@fpm/api",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": { ".": "./src/index.ts" },
+  "scripts": { "typecheck": "tsc -p tsconfig.json", "test": "vitest run" },
+  "dependencies": { "@fpm/types": "workspace:*", "@fpm/i18n": "workspace:*", "@supabase/supabase-js": "^2.117.2" },
+  "devDependencies": { "vitest": "^5.0.3" }
+}
