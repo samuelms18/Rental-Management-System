@@ -82,10 +82,11 @@ supabase/seed/             seed.sql with fake data only
 15. Validate all input server-side with the shared Zod schema.
 
 ## Business defaults
-- Rent due day: 5th of every month (field `rent_due_day` on tenancy, default 5). Rent paid in advance for current month.
+- Rent due day: 1st of every month by default (field `rent_due_day` on tenancy, default 1; set per tenancy). Rent paid in advance for current month.
 - Rent charges generated 7 days before due date by a daily job. Idempotent.
 - Reminders: 5 days before, 2 days before, on due day, then every 3 days while overdue. Quiet hours 21:00–08:00 IST.
-- Mid-month move-in: pro-rated by days, then joins the 5th cycle.
+- Rent is always the full monthly amount (family rule, Oct 2026): a mid-month move-in pays the full first month at move-in,
+  and the move-out month is not reduced. `prorate()` exists but no charge uses it.
 - EB: one meter per house, bimonthly (TNEB). Bills entered manually by a manager.
   `paid_by`: 'tenant_direct' | 'owner_reimbursed' (owner pays → reimbursement charge for tenant).
 - Former tenant ID documents (and guest IDs) deleted 12 months after settlement.

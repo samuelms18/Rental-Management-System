@@ -62,7 +62,7 @@ export default async function NewTenancy({ searchParams }: { searchParams: Promi
               <Input name="notice_period_days" type="number" min={0} max={365} defaultValue={30} inputMode="numeric" />
             </Field>
             <Field name="rent_due_day" label={t('tenancy.dueDay')} hint={t('tenancy.dueDayHint')}>
-              <Input name="rent_due_day" type="number" min={1} max={28} defaultValue={5} inputMode="numeric" />
+              <Input name="rent_due_day" type="number" min={1} max={28} defaultValue={1} inputMode="numeric" />
             </Field>
           </div>
           <p className="text-xs text-muted">{t('tenancy.firstMonthNote')}</p>

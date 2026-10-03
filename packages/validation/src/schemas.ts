@@ -80,7 +80,7 @@ export const tenancySchema = z
     rent_paise: positiveRupees,
     advance_paise: rupees.default(0),
     notice_period_days: z.coerce.number().int().min(0).max(365).default(30),
-    rent_due_day: z.coerce.number().int().min(1).max(28).default(5),
+    rent_due_day: z.coerce.number().int().min(1).max(28).default(1),
   })
   .refine((v) => !v.expected_end_date || v.expected_end_date > v.start_date, {
     path: ['expected_end_date'],

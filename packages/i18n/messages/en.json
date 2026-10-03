@@ -424,7 +424,7 @@
     "advance": "Advance / deposit",
     "noticeDays": "Notice period (days)",
     "dueDay": "Rent due day",
-    "dueDayHint": "Default is the 5th of every month",
+    "dueDayHint": "Default is the 1st of every month. Rent is always the full month, even for a mid-month move-in.",
     "code": "Tenancy ID",
     "rentHistory": "Rent history",
     "addRevision": "Change rent",
@@ -446,7 +446,7 @@
     "occupants": "Occupants",
     "documents": "Documents",
     "consentMissing": "Tenant has not accepted the privacy notice yet. Documents can be uploaded after that.",
-    "firstMonthNote": "The first month is pro-rated from the start date."
+    "firstMonthNote": "The first month is charged in full from the start date."
   },
   "occupants": {
     "title": "Occupants",

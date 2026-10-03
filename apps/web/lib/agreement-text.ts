@@ -31,11 +31,18 @@ export function fillAgreement(template: string, d: AgreementData): string {
     start_date: formatDate(d.start_date),
     end_date: formatDate(d.end_date),
     notice_days: String(d.notice_days),
-    due_day: String(d.due_day),
+    due_day: ordinal(d.due_day),
     occupants: d.occupants.length ? d.occupants.join(', ') : 'None besides the Tenant',
     agreement_date: formatDate(d.agreement_date),
   };
   return template.replace(/\{\{\s*(\w+)\s*\}\}/g, (m, k: string) => values[k] ?? m);
+}
+
+/** 1 → "1st", 2 → "2nd", 5 → "5th", 22 → "22nd". */
+export function ordinal(n: number): string {
+  const tens = n % 100;
+  if (tens >= 11 && tens <= 13) return `${n}th`;
+  return `${n}${['th', 'st', 'nd', 'rd'][n % 10] ?? 'th'}`;
 }
 
 export const PLACEHOLDERS = [

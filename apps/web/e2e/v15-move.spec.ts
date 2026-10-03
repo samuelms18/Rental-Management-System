@@ -7,10 +7,9 @@ test.describe.configure({ mode: 'serial' });
 const T = '40000000-0000-4000-a000-000000000002';
 let manager: Page;
 let tenant: Page;
-// Moving out today pro-rates this month's ₹15,000 rent to the days stayed (rounded to whole rupees).
+// Family rule: the last month's ₹15,000 rent is charged in full, whatever the move-out day.
 const today = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Kolkata' }).format(new Date());
-const [yy, mm, dd] = today.split('-').map(Number) as [number, number, number];
-const finalRent = Math.round((15000 * dd) / new Date(Date.UTC(yy, mm, 0)).getUTCDate());
+const finalRent = 15000;
 const refund = `₹${(80000 - 3000 - finalRent).toLocaleString('en-IN')}`;
 
 test.beforeAll(async ({ browser }) => {

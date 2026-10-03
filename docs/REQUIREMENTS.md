@@ -223,10 +223,10 @@ A scheduled job creates one rent charge per active tenancy each month; a charge 
 **Reminder schedule (configurable per property):** 5 days before, 2 days before, on the due date, and every 3 days while overdue. Dates are computed back from the actual due date.
 
 **Due day: the 5th of every month, for all houses.** Rent is paid in advance for the current month (October rent is due 5 October). One due day keeps reminders, the dashboard and follow-up in a single batch, and the 5th falls just after most salary credits on the 1st. With the reminder rules above: 5 days before (31st or 30th), 2 days before (3rd), the 5th (due), then the 8th, 11th and so on while overdue.
-- A tenant moving in mid-month pays a pro-rated amount for the remaining days at move-in (created when the tenancy is activated), then joins the 5th cycle from the next month.
+- ~~A tenant moving in mid-month pays a pro-rated amount~~ **Changed 4 Oct 2026 (owner's decision):** the rent is fixed; a tenant moving in mid-month pays the full month's rent at move-in, then joins the regular cycle. Due day defaults to the 1st (set per tenancy).
 - Each tenancy keeps a due-day field, so one house can be given a different day if a tenant's salary date needs it.
 
-**First and last month:** pro-rated by days for partial months, with the owner able to override the amount.
+**First and last month:** ~~pro-rated by days~~ full month's rent (changed 4 Oct 2026), with the owner able to override the amount.
 
 **Rent receipts (V1):** when a payment is approved, the app generates a PDF receipt with receipt number (e.g. `RCPT-2026-0001`), tenant, house, month, amount, method, UTR, date received and the owner's name. The tenant downloads it from the app or a manager shares it on WhatsApp. Receipts are numbered in sequence without gaps, restarting each year, and cannot be edited; a mistake is corrected by cancelling and reissuing.
 

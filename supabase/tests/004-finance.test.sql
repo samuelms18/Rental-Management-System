@@ -5,7 +5,7 @@ select tests.seed_world();
 
 -- ---------- Rent generation (run as the job does: postgres, fixed dates) ----------
 -- Tenancies started in December, so January is the first job-generated month.
-update public.tenancies set start_date = '2025-12-01' where id in (tests.w('tya'), tests.w('tyb'), tests.w('tyc'));
+update public.tenancies set start_date = '2025-12-01', rent_due_day = 5 where id in (tests.w('tya'), tests.w('tyb'), tests.w('tyc'));
 -- Count only this test's tenancies (local seed data may exist alongside).
 create temp view world_charges as
   select * from public.charges where tenancy_id in (tests.w('tya'), tests.w('tyb'), tests.w('tyc'));
@@ -22,7 +22,7 @@ select is((select due_date from public.charges where tenancy_id = tests.w('tya')
 select is((select amount_paise from public.charges where tenancy_id = tests.w('tya')), 1500000::bigint,
   'full month uses the rent revision in effect');
 
--- Pro-rating
+-- Pro-rating helper (kept for reference; rent charges no longer use it)
 select is(public.prorate(3100000, '2026-10-20', '2026-10-31'), 1200000::bigint, '12 of 31 days of ₹31,000 = ₹12,000');
 
 -- First month at activation (new move-in this month)
@@ -37,8 +37,8 @@ update public.tenancies set status = 'active' where house_id = tests.w('b1') and
 select is(
   (select amount_paise from public.charges c join public.tenancies t on t.id = c.tenancy_id
    where t.house_id = tests.w('b1') and t.status = 'active'),
-  public.prorate(3100000, public.today_ist(), (date_trunc('month', public.today_ist()) + interval '1 month - 1 day')::date),
-  'first month is pro-rated from the move-in date');
+  3100000::bigint,
+  'first month is the full rent whatever the move-in day (family rule)');
 select is((select status from public.houses where id = tests.w('b1')), 'occupied', 'activation marks the house occupied');
 
 -- ---------- Overdue ----------
