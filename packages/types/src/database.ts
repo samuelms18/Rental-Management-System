@@ -1258,6 +1258,11 @@ isOneToOne: true
 "settle_move_out":
 { Args: { "p_method": string,"p_reference"?: string,"p_refund_date": string,"p_tenancy_id": string }; Returns: undefined
                            },
+"settlement_header":
+{ Args: { "p_tenancy_id": string }; Returns: {
+              "code": string,"payee_name": string,"property_name": string,"tenant_name": string,"unit_number": string
+            }[]
+                           },
 "share_settlement":
 { Args: { "p_tenancy_id": string }; Returns: undefined
                            },

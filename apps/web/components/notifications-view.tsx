@@ -17,7 +17,8 @@ export async function NotificationsView({ items }: { items: Tables<'notification
     if (typeof p.amount_paise === 'number') values.amount = formatINR(p.amount_paise);
     if (typeof p.type === 'string') values.type = t(`labels.chargeType.${p.type}`);
     if (typeof p.status === 'string') values.status = t(`status.complaint.${p.status}`);
-    for (const k of ['reason', 'code', 'title', 'days', 'count']) values[k] = values[k] ?? '';
+    if (typeof p.date === 'string') values.date = formatDate(p.date, locale);
+    for (const k of ['reason', 'code', 'title', 'days', 'count', 'note', 'name', 'house', 'date']) values[k] = values[k] ?? '';
     const key = `notifications.kinds.${n.kind}`;
     return t.has(key) ? t(key, values) : n.kind;
   };

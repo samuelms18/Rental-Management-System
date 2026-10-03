@@ -63,6 +63,12 @@ export default async function TenancyDetail({ params }: { params: Promise<{ id: 
             ]}
           />
           {agreement && <a href={agreement} target="_blank" rel="noreferrer" className="text-sm text-primary">{t('tenancy.viewAgreement')}</a>}
+          <div className="flex flex-wrap gap-2 pt-1">
+            <LinkButton href={`/owner/tenancies/${id}/move-in`} variant="secondary" size="sm">{t('moveIn.title')}</LinkButton>
+            {['active', 'notice_period', 'completed'].includes(ty.status) && (
+              <LinkButton href={`/owner/tenancies/${id}/move-out`} variant="secondary" size="sm">{t('moveOut.title')}</LinkButton>
+            )}
+          </div>
         </Card>
 
         <Section
@@ -124,9 +130,7 @@ export default async function TenancyDetail({ params }: { params: Promise<{ id: 
           <Card className="space-y-3">
             <p className="text-sm text-muted">{t('tenancy.completeConfirm')}</p>
             <div className="flex flex-wrap gap-2">
-              <ActionForm action={setTenancyStatus} hidden={{ id, status: 'completed' }}>
-                <SubmitButton variant="danger" confirm={t('tenancy.completeConfirm')}>{t('tenancy.complete')}</SubmitButton>
-              </ActionForm>
+              <LinkButton href={`/owner/tenancies/${id}/move-out`}>{t('moveOut.title')}</LinkButton>
               <ActionForm action={setTenancyStatus} hidden={{ id, status: 'active' }}>
                 <SubmitButton variant="secondary">{t('tenancy.withdrawNotice')}</SubmitButton>
               </ActionForm>

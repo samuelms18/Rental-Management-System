@@ -1,0 +1,20 @@
+name: Daily maintenance
+
+# Deletes identity documents whose 12-month retention has ended (files + rows).
+# Secrets: APP_URL (e.g. https://family-property-manager.<you>.workers.dev), CRON_SECRET (same value as the app's).
+
+on:
+  schedule:
+    - cron: '5 21 * * *' # 02:35 IST
+  workflow_dispatch:
+
+jobs:
+  purge:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Run retention purge
+        env:
+          APP_URL: ${{ secrets.APP_URL }}
+          CRON_SECRET: ${{ secrets.CRON_SECRET }}
+        run: |
+          curl -fsS -X POST "$APP_URL/api/cron/daily" -H "x-cron-secret: $CRON_SECRET"

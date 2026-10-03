@@ -19,6 +19,7 @@ export default async function TenantHome() {
       <>
         <PageHeader title={t('tenantHome.greeting', { name })} />
         <Empty>{t('tenantHome.noTenancy')}</Empty>
+        <Link href="/tenant/settlement" className="mt-4 block text-center text-sm text-primary">{t('moveOut.statement')}</Link>
       </>
     );
   }
@@ -40,7 +41,7 @@ export default async function TenantHome() {
       />
       <div className="space-y-6">
         {tenancy.status === 'notice_period' && tenancy.actual_end_date && (
-          <p className="rounded-xl bg-warn-soft p-3 text-sm text-warn">{t('tenantHome.notice', { date: formatDate(tenancy.actual_end_date, locale) })}</p>
+          <Link href="/tenant/settlement" className="block rounded-xl bg-warn-soft p-3 text-sm text-warn">{t('tenantHome.notice', { date: formatDate(tenancy.actual_end_date, locale) })}</Link>
         )}
         <Card className="space-y-3">
           <div className="text-sm text-muted">{t('tenantHome.rentDue')}</div>

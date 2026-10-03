@@ -598,3 +598,21 @@ select cron.schedule('disable_former_tenants', '45 19 * * *', $$select public.ru
 insert into storage.buckets (id, name, public, file_size_limit, allowed_mime_types)
 values ('tenancy-photos', 'tenancy-photos', false, 10485760, array['image/webp', 'image/jpeg', 'image/png'])
 on conflict (id) do nothing;
+
+-- Names for the statement header. Former tenants can no longer read their tenancy/house rows, so this
+-- returns just the header fields to anyone who may see the settlement.
+create or replace function public.settlement_header(p_tenancy_id uuid)
+returns table (tenant_name text, unit_number text, property_name text, code text, payee_name text)
+language sql
+stable
+security definer
+set search_path = ''
+as $$
+  select tn.full_name, h.unit_number, p.name, t.code, ps.payee_name
+  from public.tenancies t
+  join public.tenants tn on tn.id = t.tenant_id
+  join public.houses h on h.id = t.house_id
+  join public.properties p on p.id = h.property_id
+  left join public.payee_settings ps on ps.property_id = p.id
+  where t.id = p_tenancy_id and (public.is_tenancy_staff(t.id) or public.is_my_settlement(t.id));
+$$;

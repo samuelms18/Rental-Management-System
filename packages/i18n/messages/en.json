@@ -215,6 +215,13 @@
       "active": "Active",
       "expired": "Expired",
       "terminated": "Terminated"
+    },
+    "settlement": {
+      "draft": "Draft",
+      "shared_with_tenant": "Shared with tenant",
+      "acknowledged": "Acknowledged by tenant",
+      "disputed": "Disputed",
+      "settled": "Settled"
     }
   },
   "labels": {
@@ -651,7 +658,10 @@
       "agreement_sent": "Your rental agreement is ready to read and sign",
       "agreement_signed": "The tenant has signed the agreement",
       "agreement_approved": "Your rental agreement was approved",
-      "agreement_expiring": "Rental agreement ends in {days} days"
+      "agreement_expiring": "Rental agreement ends in {days} days",
+      "settlement_shared": "Your deposit settlement statement is ready",
+      "settlement_acknowledged": "The tenant agreed with the settlement statement",
+      "settlement_disputed": "The tenant disputed the settlement: {note}"
     }
   },
   "tenantHome": {
@@ -673,7 +683,8 @@
     "eb_reminder": "Hello {name}, the EB bill of {amount} for house {house} is due on {date}. Thank you.",
     "receipt": "Hello {name}, we received your payment of {amount}. Receipt {number} is available in the app. Thank you.",
     "invite": "Hello {name}, you have been added to the Family Property Manager app for house {house}. Check your email ({email}) for the link to set your password.",
-    "agreement": "Hello {name}, your rental agreement for house {house} is ready. Please read and sign it in the app: {link}"
+    "agreement": "Hello {name}, your rental agreement for house {house} is ready. Please read and sign it in the app: {link}",
+    "settlement": "Hello {name}, your deposit settlement statement is ready. Refund: {amount}. Please check it in the app: {link}"
   },
   "pdf": {
     "receiptTitle": "RENT RECEIPT",
@@ -742,5 +753,71 @@
     "acceptText": "I have read this agreement and I accept it.",
     "sign": "Sign",
     "signedOk": "Thank you. The owner will review and approve it."
+  },
+  "moveIn": {
+    "title": "Move-in checklist",
+    "stepTenant": "Tenant added",
+    "stepTenancy": "Tenancy created (rent, advance, dates)",
+    "stepOccupants": "Occupants added",
+    "stepDocuments": "Privacy consent and ID documents",
+    "stepAgreement": "Agreement signed and approved",
+    "stepAdvance": "Advance received",
+    "stepPhotos": "Move-in photos",
+    "stepMeter": "Meter reading",
+    "stepActive": "Tenancy active",
+    "completedOn": "Move-in completed on {date}",
+    "advance": "Advance received",
+    "meter": "Meter reading at move-in",
+    "meterReading": "Meter reading",
+    "meterPhoto": "Photo of the meter",
+    "photos": "Move-in photos",
+    "complete": "Complete move-in",
+    "stage": {
+      "move_in": "Move-in",
+      "move_out": "Move-out",
+      "regular": "Regular"
+    }
+  },
+  "moveOut": {
+    "title": "Move-out & deposit",
+    "details": "Move-out details",
+    "noticeDate": "Notice given on",
+    "ratePerUnit": "Rate per unit",
+    "finalEb": "Final EB share",
+    "ebSuggestion": "{units} units since the last reading ≈ {amount}",
+    "inspection": "Inspection findings",
+    "meter": "Meter reading at move-out",
+    "photos": "Photos: move-in vs move-out",
+    "atMoveIn": "At move-in",
+    "atMoveOut": "At move-out",
+    "deposit": "Deposit settlement",
+    "advanceReceived": "Advance received",
+    "unpaidRent": "Unpaid rent (from deposit)",
+    "unpaidEb": "Unpaid electricity (from deposit)",
+    "willOffset": "Will be taken from the deposit",
+    "refund": "Refund to tenant",
+    "refunded": "Refunded",
+    "outstandingAfter": "Still owed by tenant",
+    "noAdvance": "No advance is recorded for this tenancy yet. Enter what the tenant paid.",
+    "addDeduction": "Add a deduction",
+    "deductionHint": "Each deduction needs a reason. Repair costs from complaints are never added automatically.",
+    "statement": "Settlement statement",
+    "statementPdf": "Settlement statement (PDF)",
+    "noStatement": "No settlement statement yet.",
+    "share": "Share statement with tenant",
+    "shareHelp": "Unpaid rent and EB are taken from the deposit, and the statement is locked and shown to the tenant.",
+    "sharedOk": "Statement shared with the tenant.",
+    "whatsapp": "Send on WhatsApp",
+    "settle": "Record refund and settle",
+    "settleHelp": "The tenancy will be completed, the house becomes vacant and ID documents are deleted after 12 months.",
+    "settledOk": "Settled. The house is now vacant.",
+    "settledOn": "Settled on {date}",
+    "reopen": "Reopen for corrections",
+    "tenantNote": "Tenant's note",
+    "acknowledge": "I agree with this statement",
+    "dispute": "I disagree",
+    "disputeNote": "What do you disagree with?",
+    "refundedOn": "Refunded on {date} by {method}",
+    "formerAccess": "After moving out you can see this statement for 90 days."
   }
 }
