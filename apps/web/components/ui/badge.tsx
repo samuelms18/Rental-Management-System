@@ -29,6 +29,9 @@ const STATUS_TONES: Record<string, Tone> = {
   raised: 'danger', acknowledged: 'warn', assigned: 'info', in_progress: 'info', resolved: 'ok',
   tenant_confirmed: 'ok', closed: 'neutral',
   urgent: 'danger', normal: 'neutral', low: 'neutral',
+  generated: 'info', sent: 'info', awaiting_signature: 'warn', signed: 'primary', expired: 'neutral', terminated: 'neutral',
+  shared_with_tenant: 'info', disputed: 'danger', settled: 'ok',
+  upcoming: 'info', currently_staying: 'ok', checked_out: 'neutral',
 };
 
 export function toneFor(status: string): Tone {

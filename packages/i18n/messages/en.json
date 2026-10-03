@@ -65,7 +65,9 @@
     "myHouse": "My house",
     "occupants": "Occupants",
     "documents": "Documents",
-    "paymentHistory": "Payments"
+    "paymentHistory": "Payments",
+    "agreements": "Agreements",
+    "agreement": "Agreement"
   },
   "auth": {
     "signIn": "Sign in",
@@ -149,7 +151,8 @@
     "not_found": "Not found",
     "rate_limited": "Too many attempts. Wait a minute and try again.",
     "passwordMismatch": "Passwords do not match",
-    "wrong_credentials": "Wrong email or password."
+    "wrong_credentials": "Wrong email or password.",
+    "signature_required": "Sign in the box, or upload a signed copy"
   },
   "status": {
     "house": {
@@ -201,6 +204,17 @@
       "resolved": "Resolved",
       "tenant_confirmed": "Confirmed",
       "closed": "Closed"
+    },
+    "agreement": {
+      "draft": "Draft",
+      "generated": "Ready to send",
+      "sent": "Sent",
+      "awaiting_signature": "Waiting for signature",
+      "signed": "Signed",
+      "approved": "Approved",
+      "active": "Active",
+      "expired": "Expired",
+      "terminated": "Terminated"
     }
   },
   "labels": {
@@ -633,7 +647,11 @@
       "complaint_status": "Complaint {code} is now {status}",
       "complaint_reopened": "Complaint {code} was reopened: {reason}",
       "document_rejected": "A document was rejected: {reason}",
-      "invite": "Welcome"
+      "invite": "Welcome",
+      "agreement_sent": "Your rental agreement is ready to read and sign",
+      "agreement_signed": "The tenant has signed the agreement",
+      "agreement_approved": "Your rental agreement was approved",
+      "agreement_expiring": "Rental agreement ends in {days} days"
     }
   },
   "tenantHome": {
@@ -654,7 +672,8 @@
     "rent_overdue": "Hello {name}, rent of {amount} for {month} (house {house}) was due on {date} and is now {days} days overdue. Please pay as soon as possible. Thank you.",
     "eb_reminder": "Hello {name}, the EB bill of {amount} for house {house} is due on {date}. Thank you.",
     "receipt": "Hello {name}, we received your payment of {amount}. Receipt {number} is available in the app. Thank you.",
-    "invite": "Hello {name}, you have been added to the Family Property Manager app for house {house}. Check your email ({email}) for the link to set your password."
+    "invite": "Hello {name}, you have been added to the Family Property Manager app for house {house}. Check your email ({email}) for the link to set your password.",
+    "agreement": "Hello {name}, your rental agreement for house {house} is ready. Please read and sign it in the app: {link}"
   },
   "pdf": {
     "receiptTitle": "RENT RECEIPT",
@@ -672,5 +691,56 @@
     "receivedBy": "Received by",
     "owner": "Owner",
     "footer": "Computer-generated receipt. Cancelled receipts are reissued with a new number."
+  },
+  "agreements": {
+    "title": "Agreements",
+    "agreement": "Rental agreement",
+    "templates": "Templates",
+    "new": "New agreement",
+    "renew": "Renew agreement",
+    "create": "Create agreement",
+    "empty": "No agreements yet.",
+    "noneYet": "No agreement in the app yet.",
+    "startFromTenancy": "To make an agreement, open the tenancy and tap New agreement.",
+    "template": "Template",
+    "elevenMonths": "11 months by default",
+    "version": "Version",
+    "viewPdf": "View agreement (PDF)",
+    "stampedCopy": "Stamped / registered copy",
+    "legalNote": "Signing in the app records that you accept this agreement. The legal copy is the one signed on stamp paper (and registered where required), uploaded here afterwards.",
+    "step": {
+      "generate": "Check the text below, then create the PDF.",
+      "send": "Send it to the tenant to read and sign in the app.",
+      "waiting": "Waiting for the tenant to sign.",
+      "approve": "The tenant has signed. Review and approve.",
+      "stamped": "After printing on stamp paper and signing, upload the stamped copy."
+    },
+    "generate": "Create PDF",
+    "send": "Send to tenant",
+    "sentOk": "Sent. The tenant has been notified.",
+    "shareWhatsapp": "Tell the tenant on WhatsApp",
+    "approve": "Approve",
+    "terminate": "Terminate agreement",
+    "editText": "Edit the agreement text",
+    "editWarning": "Saving creates a new version. Any earlier signature no longer counts and the tenant must sign again.",
+    "saveVersion": "Save as new version",
+    "versions": "Versions",
+    "signedBy": "Signed by {role}",
+    "drawn": "drawn signature",
+    "uploaded": "uploaded copy",
+    "newTemplate": "New template",
+    "templateText": "Template text",
+    "placeholders": "Placeholders",
+    "reviewNote": "Review note",
+    "active": "Active (can be used)",
+    "signTitle": "Sign the agreement",
+    "signHere": "Sign here with your finger",
+    "clear": "Clear",
+    "signatureRequired": "Please sign in the box",
+    "orUpload": "Or upload a signed copy (photo or PDF)",
+    "signedFile": "Signed copy",
+    "acceptText": "I have read this agreement and I accept it.",
+    "sign": "Sign",
+    "signedOk": "Thank you. The owner will review and approve it."
   }
 }

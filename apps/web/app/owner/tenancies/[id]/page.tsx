@@ -3,7 +3,8 @@ import { notFound } from 'next/navigation';
 import { getLocale, getTranslations } from 'next-intl/server';
 import { formatDate, todayIST } from '@fpm/api';
 import { Badge, toneFor } from '@/components/ui/badge';
-import { Card, DefList, Empty, List, ListRow, Section } from '@/components/ui/card';
+import { Card, DefList, Empty, List, ListLink, ListRow, Section } from '@/components/ui/card';
+import { LinkButton } from '@/components/ui/button';
 import { ActionForm, Field, Input, MoneyInput, SubmitButton } from '@/components/ui/form';
 import { FileInput } from '@/components/ui/file-input';
 import { Money } from '@/components/ui/money';
@@ -27,12 +28,13 @@ export default async function TenancyDetail({ params }: { params: Promise<{ id: 
     .eq('id', id)
     .maybeSingle();
   if (!ty || !ty.tenants || !ty.houses) notFound();
-  const [{ data: revisions }, { data: charges }, { data: occupants }, { data: docs }, { data: consent }] = await Promise.all([
+  const [{ data: revisions }, { data: charges }, { data: occupants }, { data: docs }, { data: consent }, { data: agreements }] = await Promise.all([
     supabase.from('rent_revisions').select('*').eq('tenancy_id', id).order('effective_from', { ascending: false }),
     supabase.from('charges').select('*, payment_allocations(amount_paise, payments(status))').eq('tenancy_id', id).order('period_start', { ascending: false }).limit(24),
     supabase.from('occupants').select('*').eq('tenancy_id', id).order('start_date'),
     supabase.from('identity_documents').select('*').eq('tenancy_id', id).order('created_at', { ascending: false }),
     supabase.from('consents').select('id').eq('tenant_id', ty.tenants.id).limit(1).maybeSingle(),
+    supabase.from('agreements').select('id, status, start_date, end_date').eq('tenancy_id', id).order('created_at', { ascending: false }),
   ]);
   const today = todayIST();
   const currentRent = revisions?.find((r) => r.effective_from <= today) ?? revisions?.[revisions.length - 1];
@@ -62,6 +64,25 @@ export default async function TenancyDetail({ params }: { params: Promise<{ id: 
           />
           {agreement && <a href={agreement} target="_blank" rel="noreferrer" className="text-sm text-primary">{t('tenancy.viewAgreement')}</a>}
         </Card>
+
+        <Section
+          title={t('agreements.title')}
+          action={open && !(agreements ?? []).some((x) => !['expired', 'terminated'].includes(x.status)) && (
+            <LinkButton href={`/owner/agreements/new?tenancy=${id}`} size="sm">{t('agreements.new')}</LinkButton>
+          )}
+        >
+          {(agreements ?? []).length > 0 ? (
+            <List>
+              {agreements!.map((x) => (
+                <ListLink key={x.id} href={`/owner/agreements/${x.id}`} right={<Badge tone={toneFor(x.status)}>{t(`status.agreement.${x.status}`)}</Badge>}>
+                  <div className="text-sm">{formatDate(x.start_date, locale)} – {formatDate(x.end_date, locale)}</div>
+                </ListLink>
+              ))}
+            </List>
+          ) : (
+            <p className="text-sm text-muted">{t('agreements.noneYet')}</p>
+          )}
+        </Section>
 
         {/* Status actions */}
         {(ty.status === 'draft' || ty.status === 'pending_agreement') && (

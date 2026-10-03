@@ -54,7 +54,7 @@ isOneToOne: false
                     "agreement_id": string,"body_text": string,"created_at": string,"created_by": string | null,"data_snapshot": NonNullable<Json>,"id": string,"rendered_pdf_path": string | null,"version_no": number
                   }
                   Insert: {
-                    "agreement_id": string,"body_text": string,"created_at"?: string,"created_by"?: string | null,"data_snapshot"?: NonNullable<Json>,"id"?: string,"rendered_pdf_path"?: string | null,"version_no": number
+                    "agreement_id": string,"body_text": string,"created_at"?: string,"created_by"?: string | null,"data_snapshot"?: NonNullable<Json>,"id"?: string,"rendered_pdf_path"?: string | null,"version_no"?: number
                   }
                   Update: {
                     "agreement_id"?: string,"body_text"?: string,"created_at"?: string,"created_by"?: string | null,"data_snapshot"?: NonNullable<Json>,"id"?: string,"rendered_pdf_path"?: string | null,"version_no"?: number

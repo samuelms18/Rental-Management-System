@@ -11,6 +11,7 @@ export const OWNER_PRIMARY: NavItem[] = [
 export const OWNER_SECONDARY: NavItem[] = [
   { href: '/owner/properties', label: 'properties', icon: 'building' },
   { href: '/owner/tenants', label: 'tenants', icon: 'users' },
+  { href: '/owner/agreements', label: 'agreements', icon: 'file' },
   { href: '/owner/eb', label: 'eb', icon: 'zap' },
   { href: '/owner/reminders', label: 'reminders', icon: 'message' },
   { href: '/owner/expenses', label: 'expenses', icon: 'receipt' },
@@ -30,6 +31,7 @@ export const TENANT_PRIMARY: NavItem[] = [
 
 export const TENANT_SECONDARY: NavItem[] = [
   { href: '/tenant/house', label: 'myHouse', icon: 'building' },
+  { href: '/tenant/agreement', label: 'agreement', icon: 'file' },
   { href: '/tenant/payments', label: 'paymentHistory', icon: 'card' },
   { href: '/tenant/eb', label: 'eb', icon: 'zap' },
   { href: '/tenant/occupants', label: 'occupants', icon: 'users' },

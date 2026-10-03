@@ -10,7 +10,9 @@ export type Bucket =
   | 'payment-proofs'
   | 'receipts'
   | 'complaint-media'
-  | 'expense-receipts';
+  | 'expense-receipts'
+  | 'tenancy-photos'
+  | 'people-photos';
 
 type Kind = 'webp' | 'jpeg' | 'png' | 'pdf' | 'mp4';
 const MIME: Record<Kind, string> = {

@@ -15,7 +15,19 @@ const OWNERS: Record<Bucket, Array<{ table: string; column: string }>> = {
     { table: 'identity_documents', column: 'front_path' },
     { table: 'identity_documents', column: 'back_path' },
   ],
-  agreements: [{ table: 'tenancies', column: 'offline_agreement_path' }],
+  agreements: [
+    { table: 'tenancies', column: 'offline_agreement_path' },
+    { table: 'agreements', column: 'final_stamped_path' },
+    { table: 'agreement_versions', column: 'rendered_pdf_path' },
+    { table: 'signatures', column: 'image_path' },
+    { table: 'move_out_records', column: 'statement_path' },
+  ],
+  'tenancy-photos': [
+    { table: 'tenancy_photos', column: 'path' },
+    { table: 'meter_readings', column: 'photo_path' },
+    { table: 'deposit_transactions', column: 'photo_path' },
+  ],
+  'people-photos': [{ table: 'domestic_help', column: 'photo_path' }],
   payee: [{ table: 'payee_settings', column: 'qr_path' }],
   'payment-proofs': [
     { table: 'payments', column: 'proof_path' },

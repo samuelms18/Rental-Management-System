@@ -64,7 +64,7 @@ create policy agreements_update_staff on public.agreements
 create table public.agreement_versions (
   id uuid primary key default gen_random_uuid(),
   agreement_id uuid not null references public.agreements (id) on delete restrict,
-  version_no integer not null,
+  version_no integer not null default 0, -- assigned by trigger
   body_text text not null,
   rendered_pdf_path text,
   data_snapshot jsonb not null default '{}'::jsonb,
