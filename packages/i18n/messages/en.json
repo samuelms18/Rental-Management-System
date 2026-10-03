@@ -71,7 +71,8 @@
     "announcements": "Announcements",
     "guests": "Guests",
     "domesticHelp": "Domestic help",
-    "settlement": "Settlement"
+    "settlement": "Settlement",
+    "reports": "Reports"
   },
   "auth": {
     "signIn": "Sign in",
@@ -887,5 +888,36 @@
     "on": "Notifications are on for this phone",
     "denied": "Notifications are blocked in your browser settings",
     "install": "On iPhone, first add this app to your Home Screen (Share → Add to Home Screen), then open it from there"
+  },
+  "reports": {
+    "title": "Reports",
+    "from": "From",
+    "to": "To",
+    "show": "Show",
+    "rent": "Rent",
+    "eb": "Electricity",
+    "expenses": "Expenses",
+    "deposits": "Deposits",
+    "net": "Net income",
+    "netIncome": "Net",
+    "billed": "Billed",
+    "paidByTenant": "Paid by tenant",
+    "paidByOwner": "Paid by owner",
+    "reimbursed": "Reimbursed",
+    "deductions": "Deductions",
+    "offsets": "Offsets",
+    "held": "Held now",
+    "table": "Show as a table",
+    "noData": "No data for these dates.",
+    "basis": "Rent is shown for the month it is for. Collected = approved payments applied to it. Net income = rent collected − expenses for the house."
+  },
+  "history": {
+    "move_in": "Moved in",
+    "move_out": "Moved out",
+    "rent_change": "Rent changed",
+    "agreement": "Agreement approved",
+    "settlement": "Deposit settled",
+    "repair": "Major repair",
+    "meterTitle": "Electricity units between readings"
   }
 }

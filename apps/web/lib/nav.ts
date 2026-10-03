@@ -17,6 +17,7 @@ export const OWNER_SECONDARY: NavItem[] = [
   { href: '/owner/announcements', label: 'announcements', icon: 'bell' },
   { href: '/owner/guests', label: 'guests', icon: 'users' },
   { href: '/owner/expenses', label: 'expenses', icon: 'receipt' },
+  { href: '/owner/reports', label: 'reports', icon: 'list' },
   { href: '/owner/activity', label: 'activity', icon: 'list' },
   { href: '/owner/search', label: 'search', icon: 'search' },
   { href: '/owner/notifications', label: 'notifications', icon: 'bell', badge: 'unread' },

@@ -11,6 +11,7 @@ import { FileInput } from '@/components/ui/file-input';
 import { Money } from '@/components/ui/money';
 import { PageHeader } from '@/components/ui/page-header';
 import { EbAccountForm } from '@/components/eb-account-form';
+import { ColumnChart } from '@/components/charts';
 import { requireStaff } from '@/lib/auth';
 import { addHousePhoto, deleteHouse, deleteHousePhoto, setHouseStatus } from '@/lib/actions/properties';
 import { fileUrl } from '@/lib/file-url';
@@ -23,24 +24,22 @@ export default async function HouseDetail({ params, searchParams }: { params: Pr
   const locale = await getLocale();
   const { data: house } = await supabase.from('houses').select('*, properties(id, name)').eq('id', id).maybeSingle();
   if (!house) notFound();
-  const [{ data: photos }, { data: tenancies }, { data: eb }, { data: revisions }] = await Promise.all([
+  const [{ data: photos }, { data: tenancies }, { data: eb }, { data: timelineRows }, { data: meter }] = await Promise.all([
     supabase.from('house_photos').select('*').eq('house_id', id).order('area').order('sort_order'),
     supabase.from('tenancies').select('id, code, status, start_date, actual_end_date, tenants(full_name)').eq('house_id', id).order('start_date', { ascending: false }),
     supabase.from('eb_accounts').select('*').eq('house_id', id).maybeSingle(),
-    supabase.from('rent_revisions').select('effective_from, amount_paise, tenancies!inner(house_id)').eq('tenancies.house_id', id).order('effective_from', { ascending: false }),
+    supabase.rpc('house_timeline', { p_house_id: id }),
+    supabase.rpc('meter_history', { p_house_id: id }),
   ]);
   const live = tenancies?.find((x) => ['active', 'notice_period', 'pending_agreement', 'draft'].includes(x.status));
   const grouped = PHOTO_AREAS.map((area) => [area, (photos ?? []).filter((p) => p.area === area)] as const).filter(([, list]) => list.length);
   const canSetStatus = house.status !== 'occupied';
 
-  // Timeline: move-ins, move-outs, rent changes
-  const timeline = [
-    ...(tenancies ?? []).flatMap((x) => [
-      { date: x.start_date, text: `${x.tenants?.full_name} · ${t('status.tenancy.active')}` },
-      ...(x.actual_end_date && x.status === 'completed' ? [{ date: x.actual_end_date, text: `${x.tenants?.full_name} · ${t('status.tenancy.completed')}` }] : []),
-    ]),
-    ...(revisions ?? []).map((r) => ({ date: r.effective_from, text: `${t('tenancy.rentHistory')}: ${new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }).format(r.amount_paise / 100)}` })),
-  ].sort((a, b) => b.date.localeCompare(a.date));
+  const timeline = (timelineRows ?? []).map((e) => ({
+    date: e.on_date,
+    text: `${t(`history.${e.kind}`)} · ${e.label}${e.amount_paise != null ? ` · ${new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }).format(e.amount_paise / 100)}` : ''}`,
+  }));
+  const meterRows = (meter ?? []).filter((m) => m.units != null);
 
   return (
     <>
@@ -138,6 +137,20 @@ export default async function HouseDetail({ params, searchParams }: { params: Pr
         <Section title={t('houses.ebAccount')}>
           <Card><EbAccountForm houseId={id} account={eb} /></Card>
         </Section>
+
+        {meterRows.length > 0 && (
+          <Section title={t('history.meterTitle')}>
+            <Card>
+              <ColumnChart
+                title={t('history.meterTitle')}
+                labels={meterRows.map((m) => formatDate(m.read_on, locale))}
+                series={[{ name: t('eb.units'), color: 'var(--fpm-series-1)', values: meterRows.map((m) => Number(m.units)) }]}
+                format={(v) => String(Math.round(v))}
+                tableHeader={t('reports.table')}
+              />
+            </Card>
+          </Section>
+        )}
 
         {timeline.length > 0 && (
           <Section title={t('houses.history')}>

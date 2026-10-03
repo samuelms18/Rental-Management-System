@@ -7,7 +7,7 @@ export function pdfSafe(s: string): string {
     .replace(/₹\s?/g, 'Rs. ')
     .replace(/[‘’]/g, "'")
     .replace(/[“”]/g, '"')
-    .replace(/[–—]/g, '-')
+    .replace(/[–—−]/g, '-')
     .replace(/…/g, '...')
     .replace(/[^\x09\x0A\x0D\x20-\x7E\xA0-\xFF]/g, '?');
 }

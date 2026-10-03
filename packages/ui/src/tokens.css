@@ -41,3 +41,17 @@
     --fpm-info-soft: #172640;
   }
 }
+
+/* Chart series (validated categorical slots 1–2; see docs: dataviz palette) */
+:root {
+  --fpm-series-1: #2a78d6;
+  --fpm-series-2: #eb6834;
+  --fpm-grid: #e6e3db;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --fpm-series-1: #3987e5;
+    --fpm-series-2: #d95926;
+    --fpm-grid: #2f2d27;
+  }
+}
