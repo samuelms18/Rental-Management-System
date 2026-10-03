@@ -1,6 +1,8 @@
 import Link from 'next/link';
 import { getLocale, getTranslations } from 'next-intl/server';
-import { formatDate, formatINR } from '@fpm/api';
+import { formatDate } from '@fpm/api';
+import { notificationText } from '@/lib/notification-text';
+import { PushToggle } from '@/components/push-toggle';
 import type { Tables } from '@fpm/types';
 import { Empty, List } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -11,17 +13,7 @@ import { cn } from '@/components/ui/cn';
 export async function NotificationsView({ items }: { items: Tables<'notifications'>[] }) {
   const t = await getTranslations();
   const locale = await getLocale();
-  const text = (n: Tables<'notifications'>) => {
-    const p = (n.params ?? {}) as Record<string, string | number>;
-    const values: Record<string, string | number> = { ...p };
-    if (typeof p.amount_paise === 'number') values.amount = formatINR(p.amount_paise);
-    if (typeof p.type === 'string') values.type = t(`labels.chargeType.${p.type}`);
-    if (typeof p.status === 'string') values.status = t(`status.complaint.${p.status}`);
-    if (typeof p.date === 'string') values.date = formatDate(p.date, locale);
-    for (const k of ['reason', 'code', 'title', 'days', 'count', 'note', 'name', 'house', 'date']) values[k] = values[k] ?? '';
-    const key = `notifications.kinds.${n.kind}`;
-    return t.has(key) ? t(key, values) : n.kind;
-  };
+  const text = (n: Tables<'notifications'>) => notificationText(t, locale, n.kind, n.params);
   return (
     <>
       <PageHeader
@@ -34,6 +26,7 @@ export async function NotificationsView({ items }: { items: Tables<'notification
           ) : null
         }
       />
+      <PushToggle />
       {items.length === 0 ? (
         <Empty>{t('notifications.empty')}</Empty>
       ) : (

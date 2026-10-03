@@ -74,7 +74,6 @@ export function FileInput({
           }}
         />
       </label>
-      {error && <p className="mt-1 text-xs text-danger">{t.has(`errors.${error}`) ? t(`errors.${error}`) : t('errors.invalid')}</p>}
     </div>
   );
 }

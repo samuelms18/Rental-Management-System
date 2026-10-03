@@ -207,11 +207,14 @@ export async function uploadDocument(_: ActionState, form: FormData): Promise<Ac
   const { data: tenancy } = await supabase.from('tenancies').select('id, tenant_id').eq('id', parsed.data.tenancy_id).maybeSingle();
   if (!tenancy) return { errors: { _form: 'not_allowed' } };
   // The ID must belong to this tenancy's tenant or one of its occupants.
-  let ownerType: 'tenant' | 'occupant' = 'tenant';
+  let ownerType: 'tenant' | 'occupant' | 'domestic_help' = 'tenant';
   if (parsed.data.owner_id !== tenancy.tenant_id) {
     const { data: occ } = await supabase.from('occupants').select('id').eq('id', parsed.data.owner_id).eq('tenancy_id', tenancy.id).maybeSingle();
-    if (!occ) return { errors: { _form: 'not_allowed' } };
-    ownerType = 'occupant';
+    const { data: help } = occ
+      ? { data: null }
+      : await supabase.from('domestic_help').select('id').eq('id', parsed.data.owner_id).eq('tenancy_id', tenancy.id).maybeSingle();
+    if (!occ && !help) return { errors: { _form: 'not_allowed' } };
+    ownerType = occ ? 'occupant' : 'domestic_help';
   }
   const front = form.get('front');
   if (!hasFile(front)) return { errors: { front: 'file_required' } };

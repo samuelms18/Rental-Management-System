@@ -67,7 +67,11 @@
     "documents": "Documents",
     "paymentHistory": "Payments",
     "agreements": "Agreements",
-    "agreement": "Agreement"
+    "agreement": "Agreement",
+    "announcements": "Announcements",
+    "guests": "Guests",
+    "domesticHelp": "Domestic help",
+    "settlement": "Settlement"
   },
   "auth": {
     "signIn": "Sign in",
@@ -152,7 +156,8 @@
     "rate_limited": "Too many attempts. Wait a minute and try again.",
     "passwordMismatch": "Passwords do not match",
     "wrong_credentials": "Wrong email or password.",
-    "signature_required": "Sign in the box, or upload a signed copy"
+    "signature_required": "Sign in the box, or upload a signed copy",
+    "guest_id_required": "An ID photo is required for every guest, even for one night"
   },
   "status": {
     "house": {
@@ -222,6 +227,11 @@
       "acknowledged": "Acknowledged by tenant",
       "disputed": "Disputed",
       "settled": "Settled"
+    },
+    "guest": {
+      "upcoming": "Upcoming",
+      "currently_staying": "Staying now",
+      "checked_out": "Checked out"
     }
   },
   "labels": {
@@ -661,7 +671,9 @@
       "agreement_expiring": "Rental agreement ends in {days} days",
       "settlement_shared": "Your deposit settlement statement is ready",
       "settlement_acknowledged": "The tenant agreed with the settlement statement",
-      "settlement_disputed": "The tenant disputed the settlement: {note}"
+      "settlement_disputed": "The tenant disputed the settlement: {note}",
+      "guest_registered": "Guest {name} registered at {house} from {date}",
+      "announcement": "New announcement: {title}"
     }
   },
   "tenantHome": {
@@ -819,5 +831,61 @@
     "disputeNote": "What do you disagree with?",
     "refundedOn": "Refunded on {date} by {method}",
     "formerAccess": "After moving out you can see this statement for 90 days."
+  },
+  "guests": {
+    "title": "Guests",
+    "rule": "Register every guest who stays overnight, with an ID photo — even for one night.",
+    "register": "Register guest",
+    "registered": "Guest registered. The managers have been informed.",
+    "checkIn": "Arriving on",
+    "checkout": "Leaving on",
+    "purpose": "Purpose of visit",
+    "idPhoto": "ID photo (required)",
+    "list": "Your guests",
+    "empty": "No guests.",
+    "checkOutNow": "Mark as left",
+    "log": "Guest log",
+    "current": "Staying now / upcoming",
+    "past": "Past guests"
+  },
+  "help": {
+    "title": "Domestic help",
+    "add": "Add domestic help",
+    "role": "Work",
+    "roles": {
+      "maid": "Maid",
+      "cook": "Cook",
+      "driver": "Driver",
+      "caretaker": "Caretaker",
+      "other": "Other"
+    },
+    "stopped": "No longer working",
+    "empty": "No domestic help added.",
+    "idHint": "Upload their ID from the Documents page."
+  },
+  "announcements": {
+    "title": "Announcements",
+    "empty": "No announcements.",
+    "to": "Send to",
+    "allTenants": "All tenants",
+    "message": "Message",
+    "post": "Send announcement",
+    "posted": "Announcement sent.",
+    "sent": "Sent",
+    "readBy": "{count, plural, =0 {Not read yet} one {Read by #} other {Read by #}}",
+    "targets": {
+      "all": "All tenants",
+      "property": "One property",
+      "house": "One house",
+      "tenant": "One tenant"
+    }
+  },
+  "push": {
+    "offer": "Get notifications on this phone",
+    "enable": "Turn on",
+    "disable": "Turn off",
+    "on": "Notifications are on for this phone",
+    "denied": "Notifications are blocked in your browser settings",
+    "install": "On iPhone, first add this app to your Home Screen (Share → Add to Home Screen), then open it from there"
   }
 }

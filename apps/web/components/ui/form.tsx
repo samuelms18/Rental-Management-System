@@ -1,7 +1,6 @@
 'use client';
 
-import { createContext, useActionState, useContext, useEffect, useRef } from 'react';
-import { useFormStatus } from 'react-dom';
+import { createContext, startTransition, useActionState, useContext, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import type { ActionState } from '@/lib/action-state';
@@ -9,6 +8,7 @@ import { buttonClass } from './button';
 import { cn } from './cn';
 
 const FormStateContext = createContext<ActionState>({});
+const FormPendingContext = createContext(false);
 
 export function ActionForm({
   action,
@@ -23,7 +23,7 @@ export function ActionForm({
   resetOnSuccess?: boolean;
   hidden?: Record<string, string | number | null | undefined>;
 }) {
-  const [state, formAction] = useActionState(action, {});
+  const [state, formAction, pending] = useActionState(action, {});
   const ref = useRef<HTMLFormElement>(null);
   const router = useRouter();
 
@@ -34,7 +34,19 @@ export function ActionForm({
 
   return (
     <FormStateContext.Provider value={state}>
-      <form ref={ref} action={formAction} className={cn('space-y-4', className)} noValidate>
+      <FormPendingContext.Provider value={pending}>
+      <form
+        ref={ref}
+        action={formAction}
+        className={cn('space-y-4', className)}
+        noValidate
+        // Submit manually so React does not reset the fields: on a validation error the user keeps what they typed.
+        onSubmit={(e) => {
+          e.preventDefault();
+          const data = new FormData(e.currentTarget, (e.nativeEvent as SubmitEvent).submitter);
+          startTransition(() => formAction(data));
+        }}
+      >
         {hidden &&
           Object.entries(hidden).map(([k, v]) =>
             v === null || v === undefined ? null : <input key={k} type="hidden" name={k} value={String(v)} />,
@@ -42,6 +54,7 @@ export function ActionForm({
         {children}
         <FormMessage />
       </form>
+      </FormPendingContext.Provider>
     </FormStateContext.Provider>
   );
 }
@@ -179,7 +192,7 @@ export function SubmitButton({
   name?: string;
   value?: string;
 }) {
-  const { pending } = useFormStatus();
+  const pending = useContext(FormPendingContext);
   const t = useTranslations('common');
   return (
     <button
