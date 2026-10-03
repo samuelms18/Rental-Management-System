@@ -1,0 +1,61 @@
+name: Weekly backup
+
+# Database (pg_dump) + every Storage bucket, encrypted with age, kept 90 days as an artifact.
+# Secrets needed (Settings → Secrets and variables → Actions):
+#   SUPABASE_DB_URL           Session pooler connection string (Supabase → Connect → Session pooler).
+#                             The direct db.<ref>.supabase.co host is IPv6-only; GitHub runners can't reach it.
+#   SUPABASE_URL              https://<ref>.supabase.co
+#   SUPABASE_SERVICE_ROLE_KEY Service role key (to download private files)
+#   AGE_PUBLIC_KEY            Public key from `age-keygen` (keep the private key OFF GitHub, e.g. printed + in a password manager)
+
+on:
+  schedule:
+    - cron: '30 20 * * 0' # Sundays 02:00 IST
+  workflow_dispatch:
+
+jobs:
+  backup:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install pg_dump 17 and age
+        run: |
+          sudo install -d /usr/share/postgresql-common/pgdg
+          sudo curl -fsSo /usr/share/postgresql-common/pgdg/apt.postgresql.org.asc https://www.postgresql.org/media/keys/ACCC4CF8.asc
+          echo "deb [signed-by=/usr/share/postgresql-common/pgdg/apt.postgresql.org.asc] https://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" | sudo tee /etc/apt/sources.list.d/pgdg.list
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq postgresql-client-17 age
+      - name: Dump database
+        env:
+          DB_URL: ${{ secrets.SUPABASE_DB_URL }}
+        run: |
+          mkdir -p backup
+          /usr/lib/postgresql/17/bin/pg_dump "$DB_URL" --no-owner --no-privileges \
+            --schema=public --schema=auth --schema=storage --format=custom --file=backup/database.dump
+          ls -la backup
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile --filter family-property-manager
+      - name: Download all storage files
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+        run: |
+          node scripts/backup-storage.mjs backup/storage
+      - name: Encrypt
+        env:
+          AGE_PUBLIC_KEY: ${{ secrets.AGE_PUBLIC_KEY }}
+        run: |
+          name="fpm-backup-$(date -u +%Y-%m-%d)"
+          tar -czf - backup | age -r "$AGE_PUBLIC_KEY" > "$name.tar.gz.age"
+          rm -rf backup
+          echo "NAME=$name" >> "$GITHUB_ENV"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ${{ env.NAME }}
+          path: ${{ env.NAME }}.tar.gz.age
+          retention-days: 90

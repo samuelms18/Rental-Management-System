@@ -40,7 +40,6 @@ export async function GET(request: NextRequest) {
 
   let allowedRow: Record<string, unknown> | null = null;
   for (const { table, column } of OWNERS[bucket]) {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const { data } = await (supabase.from(table as any) as any).select('*').eq(column, path).limit(1).maybeSingle();
     if (data) {
       allowedRow = data;

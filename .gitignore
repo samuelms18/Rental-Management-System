@@ -16,3 +16,5 @@ supabase/.temp
 next-env.d.ts
 apps/web/e2e/.results
 playwright-report
+.dev.vars
+.wrangler

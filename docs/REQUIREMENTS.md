@@ -94,7 +94,7 @@ The whole product runs on free tiers at zero monthly cost: one responsive web ap
 | Messaging | WhatsApp share links (pre-filled message, sent by a manager's tap) | Free | Reminders tenants actually read |
 | Push | Web Push (V1.5) | Free | Device notifications for installed PWA |
 | Email | Gmail SMTP with an app password, set as Supabase Auth custom SMTP | Free (~500/day) | Tenant invites, owner alerts, password reset |
-| PDF | React-PDF (Next.js route, or Edge Function if the bundle is too large) | Free | Receipts, agreements |
+| PDF | pdf-lib in a Next.js route (smaller than React-PDF; fits the Workers limit) | Free | Receipts, agreements |
 | Languages | next-intl with translation files | Free | Multi-language screens and messages |
 | Hosting | Cloudflare Workers via @opennextjs/cloudflare | Free | Web deployment |
 | Backups | Weekly GitHub Action: pg_dump + Storage bucket copy | Free | Supabase free tier has no automatic backups |
@@ -535,6 +535,6 @@ Applied after reviewing the Claude Code kit against v1.2. Each is reflected abov
 | F10 | UTR unique only among non-rejected payments; no over-allocation; only approved payments count; tenants cannot set review fields | 8, Phase 4 |
 | F11 | First pro-rated rent charge created at activation; reminder dates computed from the due date | 8, Phase 4 |
 | F12 | Gap-free receipt numbers restarting yearly (`receipt_counters`) | 8, 17, Phase 4 |
-| F13 | Check the Cloudflare Workers 3 MB bundle limit with React-PDF in Phase 1; Edge Function fallback | 3, Phase 1 |
+| F13 | Check the Cloudflare Workers 3 MB bundle limit in Phase 1. Result: 2.1 MB with pdf-lib, webpack build and minify | 3, Phase 1 |
 | F14 | Hosting is Cloudflare Workers (OpenNext), not Pages | 3 |
 | F15 | Tamil Nadu registration / advance-cap rules to be confirmed before Phase 6 | 11, 20, Phase 6 |

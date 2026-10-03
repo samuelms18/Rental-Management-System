@@ -64,8 +64,8 @@ test('manager adds a tenant (invite email goes out) and a tenancy for H03', asyn
 });
 
 test('tenant accepts the invite, sets a password and agrees to the privacy notice', async () => {
-  const link = await latestEmailLink(tenantEmail);
-  await tenant.goto(link);
+  const link = new URL(await latestEmailLink(tenantEmail));
+  await tenant.goto(link.pathname + link.search); // same app, whichever host the test runs against
   await tenant.waitForURL(/set-password/);
   await tenant.locator('input[name=password]').fill('meena-pass-123');
   await tenant.locator('input[name=confirm]').fill('meena-pass-123');

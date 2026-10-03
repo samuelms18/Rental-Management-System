@@ -1,6 +1,8 @@
 import next from 'eslint-config-next';
 
-export default [
+const config = [
   ...next,
-  { ignores: ['.next/**', '.open-next/**', 'public/sw.js', 'next-env.d.ts'] },
+  { ignores: ['.next/**', '.open-next/**', '.wrangler/**', 'e2e/.results/**', 'public/sw.js', 'next-env.d.ts'] },
 ];
+
+export default config;

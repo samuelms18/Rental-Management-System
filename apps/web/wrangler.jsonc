@@ -1,0 +1,12 @@
+{
+  // Cloudflare Workers (free plan) deployment via OpenNext.
+  // Set secrets with: npx wrangler secret put SUPABASE_SERVICE_ROLE_KEY
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "family-property-manager",
+  "main": ".open-next/worker.js",
+  "compatibility_date": "2026-09-01",
+  "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
+  "assets": { "directory": ".open-next/assets", "binding": "ASSETS" },
+  "minify": true,
+  "observability": { "enabled": true }
+}

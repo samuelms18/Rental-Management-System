@@ -28,8 +28,12 @@ paid e-sign, native app-store apps, any paid SaaS. If a feature seems to need a 
 - Supabase: Postgres, Auth (email+password and Google only), Storage (private buckets), pg_cron, Edge Functions
 - Zod schemas in `packages/validation`, shared client + server
 - next-intl — languages: `en` (default), `ta`, `hi`, `ml`
-- @react-pdf/renderer for receipts and agreements. Cloudflare Workers free plan limits the server
-  bundle to 3 MB: prove a test PDF deploys in Phase 1. If too large, render PDFs in a Supabase Edge Function instead.
+- PDFs: **pdf-lib** with the built-in PDF fonts, in a Next.js route handler (`/api/receipts/[id]`).
+  Chosen over @react-pdf/renderer: smaller bundle and works on Workers. Standard PDF fonts cannot shape
+  Tamil/Hindi/Malayalam, so PDF labels are English; the in-app screens are translated.
+- Cloudflare Workers free plan limits the bundle to 3 MB gzipped. Build with `next build --webpack` (Turbopack makes
+  OpenNext bundle an unused 1.4 MB image engine) and `"minify": true`. Measured 2.1 MB on 3 Oct 2026.
+  Check after each phase: `npx wrangler deploy --dry-run --outdir /tmp/cf`.
 - Email: Gmail SMTP with an app password, set as Supabase Auth custom SMTP and used for app alerts
   (free, ~500/day). Not Resend: its free tier needs a paid custom domain to email tenants.
   Supabase's default mailer only sends to project team members, so custom SMTP is required.
@@ -87,9 +91,20 @@ supabase/seed/             seed.sql with fake data only
 - Former tenant ID documents (and guest IDs) deleted 12 months after settlement.
 - Guest ID image mandatory for every guest, even one night.
 
+## Implementation notes (V1 Core, built 3 Oct 2026)
+- Files never touch Storage from the browser. Server actions check access with the user's RLS client, then upload
+  with the service role (`lib/files.ts`: type sniffed from bytes, size limits, EXIF/GPS stripped). Viewing goes through
+  `/api/files`, which only signs a 300 s URL if the user's own client can read a row referencing the file.
+- Payments change only through security-definer functions (`approve_payment`, `reject_payment`, `reverse_payment`,
+  `record_cash_payment`). Allocations count only approved payments; over-allocation is blocked by a trigger.
+- Tenancy codes (`H01-T002`) are unique per house. Pro-rated rent is rounded to whole rupees.
+- PostgREST: `payments` reaches `charges` two ways — embed with `charges!payments_charge_id_fkey(...)`.
+- `[auth.email] enable_signup` must stay **true** (false disables email login); public sign-up is off via `[auth] enable_signup = false`.
+- Tests: `supabase test db` (pgTAP, `tests.seed_world()` fixture), `pnpm test` (vitest), `apps/web/e2e` (Playwright, full month).
+
 ## Working style
 - Work one phase at a time. Read the phase file in `docs/phases/` before starting.
 - Before writing code, show a short plan (files, migrations, screens) and wait for my OK.
-- After each phase: run `pnpm lint`, `pnpm typecheck`, `pnpm test`, `supabase test db`; all must pass.
+- After each phase: run `pnpm lint`, `pnpm typecheck`, `pnpm test`, `supabase test db` and the Playwright e2e suite; all must pass.
 - Commit in small logical commits with clear messages. Never commit `.env*` files.
 - If something in the requirements is unclear or conflicts, ask instead of guessing.
