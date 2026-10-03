@@ -34,7 +34,7 @@ jobs:
           /usr/lib/postgresql/17/bin/pg_dump "$DB_URL" --no-owner --no-privileges \
             --schema=public --schema=auth --schema=storage --format=custom --file=backup/database.dump
           ls -la backup
-      - uses: pnpm/action-setup@v4
+      - uses: pnpm/action-setup@v6
       - uses: actions/setup-node@v4
         with:
           node-version: 22
