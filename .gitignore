@@ -1,0 +1,16 @@
+node_modules
+.next
+.open-next
+.wrangler
+out
+dist
+coverage
+*.tsbuildinfo
+.env
+.env.*
+!.env.example
+.DS_Store
+supabase/.branches
+supabase/.temp
+.vercel
+next-env.d.ts
