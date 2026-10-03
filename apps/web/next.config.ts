@@ -1,7 +1,30 @@
 import type { NextConfig } from 'next';
 import createNextIntlPlugin from 'next-intl/plugin';
 
+const supabase = process.env.NEXT_PUBLIC_SUPABASE_URL ?? '';
+const dev = process.env.NODE_ENV !== 'production';
+
+// Next.js injects small inline scripts, so 'unsafe-inline' is needed for scripts without nonces.
+// Everything else is locked to this site and the Supabase project (API + signed file URLs).
+const csp = [
+  "default-src 'self'",
+  `script-src 'self' 'unsafe-inline'${dev ? " 'unsafe-eval'" : ''}`,
+  "style-src 'self' 'unsafe-inline'",
+  `img-src 'self' data: blob: ${supabase}`,
+  `media-src 'self' blob: ${supabase}`,
+  `connect-src 'self' ${supabase}`,
+  "font-src 'self'",
+  "worker-src 'self'",
+  "manifest-src 'self'",
+  "frame-src 'self'",
+  "object-src 'none'",
+  "base-uri 'self'",
+  "form-action 'self'",
+  "frame-ancestors 'none'",
+].join('; ');
+
 const securityHeaders = [
+  { key: 'Content-Security-Policy', value: csp },
   { key: 'X-Frame-Options', value: 'DENY' },
   { key: 'X-Content-Type-Options', value: 'nosniff' },
   { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },

@@ -12,9 +12,12 @@ tenants, rent by UPI QR with receipts, EB bills, ID documents, complaints and fu
 
 | Release | Phases | State |
 |---|---|---|
-| V1 Core | 1–5: foundation, properties, tenants, rent/EB/receipts, complaints & dashboards | **Built and tested** — needs the setup in `docs/SETUP.md` |
-| V1.5 | 6–8: agreements, move-out & deposit settlement, guests, web push | After ~2 months of real use |
-| V2 | 9–10: reports, more languages, hardening | Later |
+| V1 Core | 1–5: foundation, properties, tenants, rent/EB/receipts, complaints & dashboards | **Built and tested** |
+| V1.5 | 6–8: agreements with e-signature, move-in/move-out & deposit settlement, guests, domestic help, announcements, phone notifications | **Built and tested** |
+| V2 | 9–10: reports (CSV/PDF), house history, meter chart, 4 languages, security hardening | **Built and tested** |
+
+Everything needs the one-time setup in `docs/SETUP.md`, then the checks in `docs/GO_LIVE.md`.
+Security: [`docs/SECURITY.md`](docs/SECURITY.md) · Languages: [`docs/LANGUAGES.md`](docs/LANGUAGES.md)
 
 ## Stack (all free tiers)
 
@@ -42,9 +45,9 @@ Staff are asked to set up 2FA with any authenticator app on first sign-in.
 ```bash
 pnpm lint && pnpm typecheck
 pnpm test                           # unit tests: money, validation, file checks, translation completeness
-supabase test db                    # 80 database tests: isolation between tenants/properties, 2FA, rent, payments, receipts
+supabase test db                    # 144 database tests: isolation, 2FA, money, agreements, deposits, guests, reports
 pnpm build && (cd apps/web && pnpm start) &
-(cd apps/web && npx playwright test)   # one full month end to end in a real browser
+(cd apps/web && npx playwright test)   # 22 browser tests: rent month, agreements, move-out, guests/push, reports
 ```
 
 ## Layout
@@ -59,6 +62,6 @@ packages/ui/           design tokens
 supabase/migrations/   schema + RLS policies + jobs (one file per phase)
 supabase/tests/        pgTAP security and business-rule tests
 supabase/seed/         fake local data only
-scripts/               bootstrap staff, backup/restore storage
-.github/workflows/     CI, weekly encrypted backup, keep-alive
+scripts/               bootstrap staff, backup/restore storage, VAPID keys
+.github/workflows/     CI, weekly encrypted backup, keep-alive, daily retention purge
 ```

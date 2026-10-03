@@ -84,7 +84,7 @@ test('tenant accepts the invite, sets a password and agrees to the privacy notic
 
 test('tenant pays by UPI QR and submits the UTR + screenshot', async () => {
   await tenant.getByRole('link', { name: 'Pay now' }).click();
-  await expect(tenant.locator('img[alt="UPI QR"]')).toBeVisible();
+  await expect(tenant.locator('img[alt="UPI QR code image"]')).toBeVisible();
   await expect(tenant.getByText('appa@okaxis')).toBeVisible();
   await tenant.screenshot({ path: `${shots}/05-pay.png`, fullPage: true });
   const shot = await QRCode.toBuffer('payment screenshot', { type: 'png' });

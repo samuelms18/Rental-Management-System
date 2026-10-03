@@ -1,7 +1,8 @@
 import Link from 'next/link';
+import { getTranslations } from 'next-intl/server';
 import { ChevronLeft } from 'lucide-react';
 
-export function PageHeader({
+export async function PageHeader({
   title,
   subtitle,
   back,
@@ -12,11 +13,12 @@ export function PageHeader({
   back?: string;
   action?: React.ReactNode;
 }) {
+  const t = await getTranslations('common');
   return (
     <header className="mb-5 flex items-start justify-between gap-3">
       <div className="flex min-w-0 items-start gap-1">
         {back && (
-          <Link href={back} className="-ml-2 flex size-11 shrink-0 items-center justify-center rounded-full hover:bg-surface-2" aria-label="Back">
+          <Link href={back} className="-ml-2 flex size-11 shrink-0 items-center justify-center rounded-full hover:bg-surface-2" aria-label={t('back')}>
             <ChevronLeft className="size-6" />
           </Link>
         )}

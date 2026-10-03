@@ -44,7 +44,9 @@
     "days": "{count, plural, one {# day} other {# days}}",
     "daysOverdue": "{count, plural, one {# day overdue} other {# days overdue}}",
     "never": "Never",
-    "signOut": "Sign out"
+    "signOut": "Sign out",
+    "previous": "Previous",
+    "next": "Next"
   },
   "nav": {
     "dashboard": "Today",
@@ -330,7 +332,9 @@
     "review": "Review",
     "remind": "Remind",
     "open": "Open",
-    "endsOn": "Ends {date}"
+    "endsOn": "Ends {date}",
+    "usageWarning": "Free plan is filling up: database {db}% and file storage {storage}% used. Ask Samuel to clean up old files or plan an upgrade.",
+    "jobFailed": "A daily job failed in the last 2 days: {jobs}. Check Supabase → scheduled_job_runs."
   },
   "properties": {
     "title": "Properties",

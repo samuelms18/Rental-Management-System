@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { getLocale, getTranslations } from 'next-intl/server';
-import { formatDate } from '@fpm/api';
+import { addDays, formatDate, todayIST } from '@fpm/api';
 import { Badge, toneFor } from '@/components/ui/badge';
 import { Empty, List, ListLink, Section, Stat } from '@/components/ui/card';
 import { Money } from '@/components/ui/money';
@@ -20,7 +20,15 @@ export default async function OwnerDashboard() {
   const { supabase, profile } = await requireStaff();
   const t = await getTranslations();
   const locale = await getLocale();
-  const { data } = await supabase.rpc('staff_dashboard');
+  const [{ data }, { data: usage }, { data: failedJobs }] = await Promise.all([
+    supabase.rpc('staff_dashboard'),
+    supabase.rpc('usage_summary'),
+    supabase.from('scheduled_job_runs').select('job, started_at').eq('ok', false).gte('started_at', addDays(todayIST(), -2)),
+  ]);
+  // Supabase free tier: 500 MB database, 1 GB file storage.
+  const u = usage as { db_bytes: number; storage_bytes: number } | null;
+  const dbPct = u ? Math.round((u.db_bytes / 500e6) * 100) : 0;
+  const storagePct = u ? Math.round((u.storage_bytes / 1e9) * 100) : 0;
   const d = data as unknown as Dashboard;
   const nothing =
     !d.pending_payments.length && !d.overdue.length && !d.complaints.length && !d.due_soon.length && !d.ending.length;
@@ -29,6 +37,12 @@ export default async function OwnerDashboard() {
     <>
       <PageHeader title={t('dashboard.title')} subtitle={profile.full_name} />
       <div className="space-y-7">
+        {(dbPct >= 80 || storagePct >= 80) && (
+          <p role="alert" className="rounded-xl bg-warn-soft p-3 text-sm text-warn">{t('dashboard.usageWarning', { db: dbPct, storage: storagePct })}</p>
+        )}
+        {!!failedJobs?.length && (
+          <p role="alert" className="rounded-xl bg-danger-soft p-3 text-sm text-danger">{t('dashboard.jobFailed', { jobs: [...new Set(failedJobs.map((j) => j.job))].join(', ') })}</p>
+        )}
         {nothing && <Empty>{t('dashboard.allClear')}</Empty>}
 
         {d.pending_payments.length > 0 && (

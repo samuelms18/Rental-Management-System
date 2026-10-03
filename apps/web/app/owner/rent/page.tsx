@@ -68,9 +68,9 @@ export default async function RentBoard({ searchParams }: { searchParams: Promis
     <>
       <PageHeader title={t('rent.board')} />
       <div className="mb-4 flex items-center justify-between">
-        <Link href={`?month=${shiftMonth(month, -1)}`} className="flex size-11 items-center justify-center rounded-full hover:bg-surface-2" aria-label="Previous"><ChevronLeft /></Link>
+        <Link href={`?month=${shiftMonth(month, -1)}`} className="flex size-11 items-center justify-center rounded-full hover:bg-surface-2" aria-label={t('common.previous')}><ChevronLeft /></Link>
         <div className="font-semibold">{formatMonth(start, locale)}</div>
-        <Link href={`?month=${shiftMonth(month, 1)}`} className="flex size-11 items-center justify-center rounded-full hover:bg-surface-2" aria-label="Next"><ChevronRight /></Link>
+        <Link href={`?month=${shiftMonth(month, 1)}`} className="flex size-11 items-center justify-center rounded-full hover:bg-surface-2" aria-label={t('common.next')}><ChevronRight /></Link>
       </div>
       <div className="mb-6 grid grid-cols-3 gap-3">
         <Stat label={t('dashboard.rentExpected')} value={<Money paise={expected} />} />

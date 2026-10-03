@@ -93,9 +93,17 @@ node scripts/bootstrap-staff.mjs
    NEXT_PUBLIC_SITE_URL=https://family-property-manager.<you>.workers.dev
    NEXT_PUBLIC_GOOGLE_SIGN_IN=false
    ```
-3. Store the service key as an encrypted Cloudflare secret (never in a file):
+   Add the **public** push key too (step 3a makes it):
+   ```
+   NEXT_PUBLIC_VAPID_PUBLIC_KEY=<from step 3a>
+   ```
+3. Store the server-only values as encrypted Cloudflare secrets (never in a file):
    ```bash
    npx wrangler secret put SUPABASE_SERVICE_ROLE_KEY
+   npx wrangler secret put CRON_SECRET            # any long random text, e.g. `openssl rand -hex 32`
+   npx wrangler secret put PUSH_DISPATCH_SECRET   # another long random text
+   npx wrangler secret put VAPID_PRIVATE_KEY      # from step 3a
+   npx wrangler secret put VAPID_SUBJECT          # mailto:<the family Gmail address>
    ```
 4. Deploy:
    ```bash
@@ -104,8 +112,30 @@ node scripts/bootstrap-staff.mjs
    The first deploy prints your URL (`https://family-property-manager.<you>.workers.dev`).
    If it differs from what you put in Supabase (step 1a) or `.env.production.local`, fix those and deploy again.
 
-The app uses about **2.1 MB of the 3 MB** Workers free-plan limit (checked 3 Oct 2026, with Next's
+The app uses about **2.3 MB of the 3 MB** Workers free-plan limit (checked 3 Oct 2026 with all releases built, using Next's
 webpack build + minify). Check again before each release: `npx wrangler deploy --dry-run --outdir /tmp/cf`.
+
+### 3a. Phone notifications (web push, free)
+
+1. Make the push key pair once, on your laptop:
+   ```bash
+   node scripts/vapid-keys.mjs
+   ```
+   It prints `NEXT_PUBLIC_VAPID_PUBLIC_KEY=…` (public, goes in `.env.production.local`) and
+   `VAPID_PRIVATE_KEY=…` (secret, goes in `wrangler secret put`). Keep both in the password manager:
+   if the pair changes, every phone has to turn notifications on again.
+2. Tell the database where to send pushes. Supabase → **SQL Editor** → run (use your app URL and the
+   same `PUSH_DISPATCH_SECRET` you gave Cloudflare):
+   ```sql
+   insert into public.app_settings (key, value) values
+     ('push_dispatch_url', 'https://family-property-manager.<you>.workers.dev/api/push/dispatch'),
+     ('push_dispatch_secret', '<PUSH_DISPATCH_SECRET>')
+   on conflict (key) do update set value = excluded.value;
+   ```
+   Nobody can read this table from the app; only the database itself uses it.
+3. On each phone: open the app → **Notifications** (bell) → **Get notifications on this phone → Turn on**.
+   iPhone needs iOS 16.4+ and the app added to the Home Screen first.
+   Notifications are held back during quiet hours (21:00–08:00 IST); the in-app bell always has them.
 
 ---
 
@@ -126,8 +156,12 @@ webpack build + minify). Check again before each release: `npx wrangler deploy -
 | `SUPABASE_SERVICE_ROLE_KEY` | service_role key |
 | `SUPABASE_DB_URL` | Supabase → **Connect → Session pooler** connection string (with your DB password). Not the direct `db.<ref>` one: it's IPv6-only and GitHub can't reach it. |
 | `AGE_PUBLIC_KEY` | the `age1...` public key |
+| `APP_URL` | `https://family-property-manager.<you>.workers.dev` |
+| `CRON_SECRET` | the same value you gave Cloudflare in step 3 |
 
-3. Actions tab → run **Weekly backup** and **Keep Supabase awake** once by hand (Run workflow). Both should go green and the backup should produce an artifact.
+3. Actions tab → run **Weekly backup**, **Keep Supabase awake** and **Daily maintenance** once by hand (Run workflow).
+   All should go green and the backup should produce an artifact. *Daily maintenance* deletes ID documents whose
+   12-month retention has ended (the database jobs for rent, reminders, agreements and guests run inside Supabase).
 
 ---
 

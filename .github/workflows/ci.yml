@@ -27,6 +27,8 @@ jobs:
         run: pnpm typecheck
       - name: Unit tests (money, validation, files, translation completeness)
         run: pnpm test
+      - name: Dependency audit (informational)
+        run: pnpm audit --prod || true
 
   database-and-e2e:
     runs-on: ubuntu-latest
@@ -58,8 +60,15 @@ jobs:
           NEXT_PUBLIC_SUPABASE_ANON_KEY=$ANON_KEY
           SUPABASE_SERVICE_ROLE_KEY=$SERVICE_ROLE_KEY
           NEXT_PUBLIC_SITE_URL=http://localhost:3000
+          CRON_SECRET=local-cron-secret-123
+          PUSH_DISPATCH_SECRET=local-push-secret-456
+          PUSH_QUIET_HOURS=off
+          VAPID_SUBJECT=mailto:ci@example.com
           ENV
+          node scripts/vapid-keys.mjs >> apps/web/.env.local
           pnpm build
+          # The service-role key must never reach the browser bundle.
+          if grep -rq "$SERVICE_ROLE_KEY" apps/web/.next/static; then echo "Service-role key found in client bundle" && exit 1; fi
           (cd apps/web && nohup pnpm start -p 3000 > /tmp/next.log 2>&1 &)
           npx wait-on -t 60000 http://localhost:3000/login
       - name: End-to-end tests

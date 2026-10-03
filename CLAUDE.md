@@ -102,6 +102,21 @@ supabase/seed/             seed.sql with fake data only
 - `[auth.email] enable_signup` must stay **true** (false disables email login); public sign-up is off via `[auth] enable_signup = false`.
 - Tests: `supabase test db` (pgTAP, `tests.seed_world()` fixture), `pnpm test` (vitest), `apps/web/e2e` (Playwright, full month).
 
+## Implementation notes (V1.5 + V2, built 3 Oct 2026)
+- Agreements: `agreement_versions` bodies are immutable; status changes only via RPCs (`send_agreement`, `sign_agreement`,
+  `approve_agreement`, …). Placeholders filled by `lib/agreement-text.ts`. PDFs use pdf-lib standard fonts, so
+  PDF labels are English; pass user text through `pdfSafe` (`lib/pdf-text.ts`).
+- Deposits are a ledger (`deposit_transactions`); deductions lock once the settlement is shared. Unpaid charges are
+  cleared with `method = 'deposit'` payments (no receipt). `settle_move_out` sets `purge_after` = +12 months.
+- Web push: DB trigger `notifications_push` → `pg_net` POST to `/api/push/dispatch` (URL + secret in `app_settings`)
+  → `lib/webpush.ts` (VAPID + aes128gcm on WebCrypto, works on Workers). `PUSH_QUIET_HOURS=off` only for tests.
+- Storage deletions (retention purge) run from `/api/cron/daily`, called by `.github/workflows/daily.yml`.
+- Reports are security-invoker SQL functions (`report_*`, `house_timeline`, `meter_history`); charts are server SVG
+  (`components/charts.tsx`, palette `--fpm-series-*`).
+- Forms use `ActionForm` (manual submit + `startTransition`) so React 19 doesn't reset fields after a server error.
+- Build with webpack (`next build --webpack`): Turbopack output is too big for the 3 MB Workers limit.
+- `docs/SECURITY.md` is the checklist; `docs/LANGUAGES.md` explains adding a language.
+
 ## Working style
 - Work one phase at a time. Read the phase file in `docs/phases/` before starting.
 - Before writing code, show a short plan (files, migrations, screens) and wait for my OK.

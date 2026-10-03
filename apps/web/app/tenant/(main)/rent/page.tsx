@@ -44,7 +44,7 @@ export default async function TenantRent() {
               <p className="text-sm">{t('pay.scan')}</p>
               {qr && (
                 // eslint-disable-next-line @next/next/no-img-element
-                <img src={qr} alt="UPI QR" className="mx-auto size-64 rounded-xl border border-border bg-white object-contain p-2" />
+                <img src={qr} alt={t('payee.qr')} className="mx-auto size-64 rounded-xl border border-border bg-white object-contain p-2" />
               )}
               <div className="text-sm text-muted">{t('pay.payTo')}: <span className="font-medium text-fg">{payee.payee_name}</span></div>
               <div className="flex items-center justify-center gap-2">
