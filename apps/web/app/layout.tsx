@@ -45,7 +45,6 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         <script dangerouslySetInnerHTML={{ __html: BOOT }} />
       </head>
       <body className="min-h-dvh antialiased">
-        <div aria-hidden className="bg-orbs"><span /><span /><span /><span /><i /><i /><i /><i /><i /><i /><i /><i /></div>
         <div aria-hidden className="splash hero">
           <div className="splash-mark flex size-20 items-center justify-center rounded-[26px] bg-white text-[var(--fpm-hero-from)] shadow-lift">
             <Building2 className="size-10" strokeWidth={1.8} />
