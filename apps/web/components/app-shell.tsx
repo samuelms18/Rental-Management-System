@@ -69,7 +69,8 @@ export async function AppShell({
       <header className="sticky top-0 z-30 flex h-16 items-center justify-between gap-3 border-b border-border bg-bg/85 px-4 backdrop-blur-md md:px-6">
         <Link href={primary[0]?.href ?? '/'} className="flex min-w-0 items-center gap-2.5">
           <BrandMark />
-          <span className="min-w-0 leading-tight">
+          {/* Phones narrower than ~430px show just the logo, so the bell, theme switch and profile card always fit. */}
+          <span className="hidden min-w-0 leading-tight min-[430px]:block">
             <span className="block truncate text-[15px] font-extrabold tracking-[-0.01em] text-primary">{t('app.homeName')}</span>
             <span className="hidden truncate text-[11px] font-medium text-muted sm:block">{t('app.name')}</span>
           </span>
