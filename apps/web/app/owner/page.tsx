@@ -34,7 +34,20 @@ export default async function OwnerDashboard() {
   const u = usage as { db_bytes: number; storage_bytes: number } | null;
   const dbPct = u ? Math.round((u.db_bytes / 500e6) * 100) : 0;
   const storagePct = u ? Math.round((u.storage_bytes / 1e9) * 100) : 0;
-  const d = data as unknown as Dashboard;
+  // Tolerate a database that is one migration behind the app (missing keys) instead of crashing the dashboard.
+  const raw = (data ?? {}) as Partial<Dashboard>;
+  const d: Dashboard = {
+    pending_payments: raw.pending_payments ?? [],
+    overdue: raw.overdue ?? [],
+    complaints: raw.complaints ?? [],
+    due_soon: raw.due_soon ?? [],
+    ending: raw.ending ?? [],
+    houses: raw.houses ?? [],
+    summary: {
+      houses_total: 0, houses_occupied: 0, houses_vacant: 0, rent_expected_paise: 0, rent_collected_paise: 0,
+      rent_pending_paise: 0, older_unpaid_paise: 0, ...raw.summary,
+    },
+  };
   const s = d.summary;
   const pct = s.rent_expected_paise ? Math.min(100, Math.round((s.rent_collected_paise / s.rent_expected_paise) * 100)) : 0;
   const nothing =
