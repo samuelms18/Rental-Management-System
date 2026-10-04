@@ -33,8 +33,8 @@ export const viewport: Viewport = {
   viewportFit: 'cover',
 };
 
-// Runs before first paint: the splash shows only on the first load of a browser session.
-const SPLASH_ONCE = `try{if(sessionStorage.getItem('fpm-splash')){document.documentElement.classList.add('splash-seen')}else{sessionStorage.setItem('fpm-splash','1')}}catch(e){}`;
+// Runs before first paint: the chosen light/dark theme, and the splash only on the first load of a browser session.
+const BOOT = `try{var d=document.documentElement,t=localStorage.getItem('fpm-theme');if(t==='dark'||t==='light')d.dataset.theme=t;if(sessionStorage.getItem('fpm-splash')){d.classList.add('splash-seen')}else{sessionStorage.setItem('fpm-splash','1')}}catch(e){}`;
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const locale = await getLocale();
@@ -42,10 +42,10 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   return (
     <html lang={locale} suppressHydrationWarning className={`${latin.variable} ${tamil.variable} ${deva.variable} ${mal.variable}`}>
       <head>
-        <script dangerouslySetInnerHTML={{ __html: SPLASH_ONCE }} />
+        <script dangerouslySetInnerHTML={{ __html: BOOT }} />
       </head>
       <body className="min-h-dvh antialiased">
-        <div aria-hidden className="bg-orbs"><span /><span /><span /></div>
+        <div aria-hidden className="bg-orbs"><span /><span /><span /><span /><i /><i /><i /><i /><i /><i /><i /><i /></div>
         <div aria-hidden className="splash hero">
           <div className="splash-mark flex size-20 items-center justify-center rounded-[26px] bg-white text-[var(--fpm-hero-from)] shadow-lift">
             <Building2 className="size-10" strokeWidth={1.8} />

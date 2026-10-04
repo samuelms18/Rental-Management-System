@@ -15,7 +15,8 @@
     "db:types": "supabase gen types typescript --local --schema public > packages/types/src/database.ts",
     "db:reset": "supabase db reset",
     "bootstrap": "node scripts/bootstrap-staff.mjs",
-    "format": "prettier --write ."
+    "format": "prettier --write .",
+    "release": "bash scripts/release.sh"
   },
   "devDependencies": {
     "@supabase/supabase-js": "^2.117.2",

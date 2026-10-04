@@ -10,7 +10,7 @@ export default async function OwnerLayout({ children }: { children: React.ReactN
       primary={OWNER_PRIMARY}
       groups={OWNER_GROUPS}
       unread={await unreadCount(viewer.user.id)}
-      viewer={{ name: viewer.profile.full_name || viewer.user.email || '', role: viewer.isOwner ? 'owner' : 'manager', profileHref: '/owner/profile' }}
+      viewer={{ name: viewer.profile.full_name || viewer.user.email || '', role: viewer.isOwner ? 'owner' : 'manager', profileHref: '/owner/profile', notificationsHref: '/owner/notifications' }}
     >
       {children}
     </AppShell>

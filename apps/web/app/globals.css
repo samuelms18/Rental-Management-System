@@ -105,7 +105,25 @@ textarea {
   [data-stagger] > *:nth-child(n + 6) { animation-delay: 250ms; }
 }
 
-/* Soft coral light drifting behind the app (cards stay opaque, so text contrast is unaffected). */
+/* Living background: big soft colour fields drifting + small glowing bubbles rising.
+   Cards stay opaque, so text contrast is unaffected. Stops for people who turn off motion. */
+:root {
+  --fpm-orb-opacity: 0.5;
+  --fpm-bubble: rgb(227 28 95 / 0.18);
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    --fpm-orb-opacity: 0.26;
+    --fpm-bubble: rgb(255 90 122 / 0.22);
+    color-scheme: dark;
+  }
+}
+:root[data-theme='dark'] {
+  --fpm-orb-opacity: 0.26;
+  --fpm-bubble: rgb(255 90 122 / 0.22);
+  color-scheme: dark;
+}
 .bg-orbs {
   position: fixed;
   inset: 0;
@@ -116,21 +134,53 @@ textarea {
 .bg-orbs span {
   position: absolute;
   border-radius: 9999px;
-  filter: blur(70px);
-  opacity: 0.32;
-  animation: fpm-drift 26s ease-in-out infinite alternate;
+  filter: blur(60px);
+  opacity: var(--fpm-orb-opacity);
+  will-change: transform;
+  animation: fpm-drift 18s ease-in-out infinite alternate;
 }
-.bg-orbs span:nth-child(1) { width: 42vmax; height: 42vmax; left: -12vmax; top: -10vmax; background: #ff385c; }
-.bg-orbs span:nth-child(2) { width: 36vmax; height: 36vmax; right: -10vmax; top: 20vh; background: #ffb3c7; animation-duration: 32s; animation-delay: -8s; }
-.bg-orbs span:nth-child(3) { width: 30vmax; height: 30vmax; left: 25vw; bottom: -14vmax; background: #ffd6a5; animation-duration: 38s; animation-delay: -16s; }
-@media (prefers-color-scheme: dark) {
-  .bg-orbs span { opacity: 0.14; }
+.bg-orbs span:nth-child(1) { width: 46vmax; height: 46vmax; left: -14vmax; top: -12vmax; background: #ff385c; }
+.bg-orbs span:nth-child(2) { width: 38vmax; height: 38vmax; right: -12vmax; top: 18vh; background: #ff8fb1; animation-duration: 22s; animation-delay: -6s; }
+.bg-orbs span:nth-child(3) { width: 34vmax; height: 34vmax; left: 20vw; bottom: -16vmax; background: #ffc48a; animation-duration: 26s; animation-delay: -12s; }
+.bg-orbs span:nth-child(4) { width: 26vmax; height: 26vmax; right: 18vw; top: -8vmax; background: #b39dff; animation-duration: 30s; animation-delay: -3s; }
+.bg-orbs i {
+  position: absolute;
+  bottom: -40px;
+  border-radius: 9999px;
+  background: var(--fpm-bubble);
+  box-shadow: 0 0 18px var(--fpm-bubble);
+  animation: fpm-bubble 16s linear infinite;
 }
+.bg-orbs i:nth-of-type(1) { left: 6%; width: 14px; height: 14px; animation-duration: 15s; }
+.bg-orbs i:nth-of-type(2) { left: 18%; width: 8px; height: 8px; animation-duration: 19s; animation-delay: -4s; }
+.bg-orbs i:nth-of-type(3) { left: 31%; width: 20px; height: 20px; animation-duration: 23s; animation-delay: -11s; }
+.bg-orbs i:nth-of-type(4) { left: 44%; width: 10px; height: 10px; animation-duration: 17s; animation-delay: -7s; }
+.bg-orbs i:nth-of-type(5) { left: 57%; width: 16px; height: 16px; animation-duration: 21s; animation-delay: -15s; }
+.bg-orbs i:nth-of-type(6) { left: 69%; width: 7px; height: 7px; animation-duration: 14s; animation-delay: -2s; }
+.bg-orbs i:nth-of-type(7) { left: 80%; width: 22px; height: 22px; animation-duration: 25s; animation-delay: -9s; }
+.bg-orbs i:nth-of-type(8) { left: 92%; width: 11px; height: 11px; animation-duration: 18s; animation-delay: -13s; }
 @keyframes fpm-drift {
   0% { transform: translate3d(0, 0, 0) scale(1); }
-  50% { transform: translate3d(6vw, 4vh, 0) scale(1.08); }
-  100% { transform: translate3d(-4vw, 8vh, 0) scale(0.95); }
+  33% { transform: translate3d(10vw, 6vh, 0) scale(1.12); }
+  66% { transform: translate3d(-6vw, 12vh, 0) scale(0.92); }
+  100% { transform: translate3d(4vw, -4vh, 0) scale(1.05); }
 }
+@keyframes fpm-bubble {
+  0% { transform: translate3d(0, 0, 0); opacity: 0; }
+  10% { opacity: 1; }
+  50% { transform: translate3d(24px, -55vh, 0); }
+  90% { opacity: 1; }
+  100% { transform: translate3d(-16px, -110vh, 0); opacity: 0; }
+}
+
+/* Theme switch icons: show the one for the theme you can switch to. */
+.when-dark { display: none; }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) .when-dark { display: block; }
+  :root:not([data-theme='light']) .when-light { display: none; }
+}
+:root[data-theme='dark'] .when-dark { display: block; }
+:root[data-theme='dark'] .when-light { display: none; }
 
 /* Splash: shown once per browser session while the app starts, then fades away by itself. */
 .splash {
@@ -199,6 +249,7 @@ textarea {
 }
 @media (prefers-reduced-motion: reduce) {
   .bg-orbs span,
+  .bg-orbs i,
   .splash-bar::after,
   .preloader-ring {
     animation: none;

@@ -10,7 +10,7 @@ export default async function TenantLayout({ children }: { children: React.React
       primary={TENANT_PRIMARY}
       groups={TENANT_GROUPS}
       unread={await unreadCount(viewer.user.id)}
-      viewer={{ name: viewer.tenant?.full_name ?? viewer.profile.full_name ?? '', role: 'tenant', profileHref: '/tenant/profile' }}
+      viewer={{ name: viewer.tenant?.full_name ?? viewer.profile.full_name ?? '', role: 'tenant', profileHref: '/tenant/profile', notificationsHref: '/tenant/notifications' }}
     >
       {children}
     </AppShell>

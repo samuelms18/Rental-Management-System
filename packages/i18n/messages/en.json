@@ -8,7 +8,9 @@
     "feature2": "Agreements signed on the phone",
     "feature3": "Complaints, EB bills and history",
     "homeName": "Saravanan & Thulasi Home",
-    "loading": "Loading…"
+    "loading": "Loading…",
+    "toggleTheme": "Switch light / dark",
+    "version": "App version {v}"
   },
   "common": {
     "save": "Save",

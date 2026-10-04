@@ -30,7 +30,7 @@
 }
 
 @media (prefers-color-scheme: dark) {
-  :root {
+  :root:not([data-theme='light']) {
     --fpm-bg: #121212;
     --fpm-surface: #1c1c1c;
     --fpm-surface-2: #262626;
@@ -53,6 +53,28 @@
     --fpm-shadow-lg: 0 6px 20px rgb(0 0 0 / 0.6);
   }
 }
+:root[data-theme='dark'] {
+  --fpm-bg: #121212;
+  --fpm-surface: #1c1c1c;
+  --fpm-surface-2: #262626;
+  --fpm-border: #333333;
+  --fpm-border-strong: #5c5c5c;
+  --fpm-text: #f7f7f7;
+  --fpm-muted: #b0b0b0;
+  --fpm-primary: #ff5a7a;
+  --fpm-primary-soft: #3a1520;
+  --fpm-hero-to: #a3164c;
+  --fpm-danger: #ff8a70;
+  --fpm-danger-soft: #3a1a12;
+  --fpm-warn: #ffb547;
+  --fpm-warn-soft: #36270f;
+  --fpm-ok: #5fd068;
+  --fpm-ok-soft: #14301a;
+  --fpm-info: #8fb0f5;
+  --fpm-info-soft: #172640;
+  --fpm-shadow: 0 1px 2px rgb(0 0 0 / 0.5), 0 2px 8px rgb(0 0 0 / 0.35);
+  --fpm-shadow-lg: 0 6px 20px rgb(0 0 0 / 0.6);
+}
 
 /* Chart series (validated categorical slots 1–2; see docs: dataviz palette) */
 :root {
@@ -61,9 +83,14 @@
   --fpm-grid: #ebebeb;
 }
 @media (prefers-color-scheme: dark) {
-  :root {
+  :root:not([data-theme='light']) {
     --fpm-series-1: #3987e5;
     --fpm-series-2: #d95926;
     --fpm-grid: #333333;
   }
+}
+:root[data-theme='dark'] {
+  --fpm-series-1: #3987e5;
+  --fpm-series-2: #d95926;
+  --fpm-grid: #333333;
 }

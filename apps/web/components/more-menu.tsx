@@ -3,6 +3,7 @@ import { getTranslations } from 'next-intl/server';
 import { ChevronRight } from 'lucide-react';
 import type { NavGroup } from '@/lib/nav';
 import { List, Section } from '@/components/ui/card';
+import { APP_VERSION } from '@/lib/version';
 
 /** Phone "More" screen: the same groups as the laptop sidebar. */
 export async function MoreMenu({ groups, unread }: { groups: NavGroup[]; unread?: number }) {
@@ -24,6 +25,7 @@ export async function MoreMenu({ groups, unread }: { groups: NavGroup[]; unread?
           </List>
         </Section>
       ))}
+      <p className="text-center text-xs text-muted">{t('app.version', { v: APP_VERSION })}</p>
     </div>
   );
 }
