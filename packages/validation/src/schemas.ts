@@ -258,3 +258,4 @@ export const memberInviteSchema = z.object({
   email: z.email('invalid_email').transform((e) => e.toLowerCase()),
   role: teamRole,
 });
+export const loginAccessSchema = z.object({ user_id: uuid, enabled: z.enum(['true', 'false']) });

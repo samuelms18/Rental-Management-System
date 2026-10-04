@@ -104,3 +104,106 @@ textarea {
   [data-stagger] > *:nth-child(5) { animation-delay: 200ms; }
   [data-stagger] > *:nth-child(n + 6) { animation-delay: 250ms; }
 }
+
+/* Soft coral light drifting behind the app (cards stay opaque, so text contrast is unaffected). */
+.bg-orbs {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+}
+.bg-orbs span {
+  position: absolute;
+  border-radius: 9999px;
+  filter: blur(70px);
+  opacity: 0.32;
+  animation: fpm-drift 26s ease-in-out infinite alternate;
+}
+.bg-orbs span:nth-child(1) { width: 42vmax; height: 42vmax; left: -12vmax; top: -10vmax; background: #ff385c; }
+.bg-orbs span:nth-child(2) { width: 36vmax; height: 36vmax; right: -10vmax; top: 20vh; background: #ffb3c7; animation-duration: 32s; animation-delay: -8s; }
+.bg-orbs span:nth-child(3) { width: 30vmax; height: 30vmax; left: 25vw; bottom: -14vmax; background: #ffd6a5; animation-duration: 38s; animation-delay: -16s; }
+@media (prefers-color-scheme: dark) {
+  .bg-orbs span { opacity: 0.14; }
+}
+@keyframes fpm-drift {
+  0% { transform: translate3d(0, 0, 0) scale(1); }
+  50% { transform: translate3d(6vw, 4vh, 0) scale(1.08); }
+  100% { transform: translate3d(-4vw, 8vh, 0) scale(0.95); }
+}
+
+/* Splash: shown once per browser session while the app starts, then fades away by itself. */
+.splash {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  pointer-events: none;
+  animation: fpm-splash-out 0.5s ease 1.4s forwards;
+}
+.splash-seen .splash {
+  display: none;
+}
+.splash-mark {
+  animation: fpm-pop 0.7s cubic-bezier(0.2, 0.9, 0.25, 1.2) both;
+}
+.splash-title {
+  animation: fpm-rise 0.6s ease 0.25s both;
+}
+.splash-bar {
+  width: 120px;
+  height: 4px;
+  border-radius: 999px;
+  background: rgb(255 255 255 / 0.3);
+  overflow: hidden;
+}
+.splash-bar::after {
+  content: '';
+  display: block;
+  height: 100%;
+  width: 40%;
+  border-radius: inherit;
+  background: #fff;
+  animation: fpm-load 1s ease-in-out infinite;
+}
+@keyframes fpm-splash-out {
+  to {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+@keyframes fpm-pop {
+  from {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes fpm-load {
+  from { transform: translateX(-100%); }
+  to { transform: translateX(250%); }
+}
+/* Page preloader (loading.tsx) */
+.preloader-ring {
+  animation: fpm-spin 0.9s linear infinite;
+}
+@keyframes fpm-spin {
+  to { transform: rotate(360deg); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .bg-orbs span,
+  .splash-bar::after,
+  .preloader-ring {
+    animation: none;
+  }
+  .splash {
+    animation-duration: 0.01s;
+  }
+}

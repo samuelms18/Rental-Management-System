@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from 'next';
 import { NextIntlClientProvider } from 'next-intl';
 import { getLocale, getTranslations } from 'next-intl/server';
 import { Noto_Sans_Devanagari, Noto_Sans_Malayalam, Noto_Sans_Tamil, Plus_Jakarta_Sans } from 'next/font/google';
+import { Building2 } from 'lucide-react';
 import { ServiceWorker } from '@/components/service-worker';
 import './globals.css';
 
@@ -32,11 +33,29 @@ export const viewport: Viewport = {
   viewportFit: 'cover',
 };
 
+// Runs before first paint: the splash shows only on the first load of a browser session.
+const SPLASH_ONCE = `try{if(sessionStorage.getItem('fpm-splash')){document.documentElement.classList.add('splash-seen')}else{sessionStorage.setItem('fpm-splash','1')}}catch(e){}`;
+
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const locale = await getLocale();
+  const t = await getTranslations('app');
   return (
-    <html lang={locale} className={`${latin.variable} ${tamil.variable} ${deva.variable} ${mal.variable}`}>
+    <html lang={locale} suppressHydrationWarning className={`${latin.variable} ${tamil.variable} ${deva.variable} ${mal.variable}`}>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: SPLASH_ONCE }} />
+      </head>
       <body className="min-h-dvh antialiased">
+        <div aria-hidden className="bg-orbs"><span /><span /><span /></div>
+        <div aria-hidden className="splash hero">
+          <div className="splash-mark flex size-20 items-center justify-center rounded-[26px] bg-white text-[var(--fpm-hero-from)] shadow-lift">
+            <Building2 className="size-10" strokeWidth={1.8} />
+          </div>
+          <div className="splash-title px-6 text-center">
+            <div className="text-[28px] font-extrabold leading-tight tracking-[-0.02em]">{t('homeName')}</div>
+            <div className="mt-1 text-sm font-medium opacity-90">{t('name')}</div>
+          </div>
+          <div className="splash-bar" />
+        </div>
         <NextIntlClientProvider>{children}</NextIntlClientProvider>
         <ServiceWorker />
       </body>

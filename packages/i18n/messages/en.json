@@ -6,7 +6,9 @@
     "tagline": "Every house, tenant and rupee — in one calm place.",
     "feature1": "Rent by UPI with instant receipts",
     "feature2": "Agreements signed on the phone",
-    "feature3": "Complaints, EB bills and history"
+    "feature3": "Complaints, EB bills and history",
+    "homeName": "Saravanan & Thulasi Home",
+    "loading": "Loading…"
   },
   "common": {
     "save": "Save",
@@ -79,7 +81,7 @@
     "domesticHelp": "Domestic help",
     "settlement": "Settlement",
     "reports": "Reports",
-    "team": "Team & roles"
+    "team": "Users & roles"
   },
   "auth": {
     "signIn": "Sign in",
@@ -977,7 +979,7 @@
     "tenant": "Tenant"
   },
   "team": {
-    "title": "Team & roles",
+    "title": "Users & roles",
     "subtitle": "Who can manage the houses, and as what",
     "people": "People",
     "you": "you",
@@ -998,5 +1000,30 @@
     "removed": "Removed from the team.",
     "invited": "Invite sent.",
     "added": "Added to the team."
+  },
+  "navGroups": {
+    "masters": "Masters",
+    "money": "Money",
+    "operations": "Operations",
+    "insights": "Reports & logs",
+    "account": "Account",
+    "myHome": "My home",
+    "community": "Visitors & notices"
+  },
+  "users": {
+    "team": "Owners and managers",
+    "tenantLogins": "Tenant logins",
+    "noLogin": "No login yet",
+    "blocked": "Blocked",
+    "invited": "Invited",
+    "active": "Active",
+    "lastSeen": "last signed in {date}",
+    "block": "Block sign-in",
+    "unblock": "Allow sign-in",
+    "blockConfirm": "Block this person from signing in? Their records stay; you can allow them again any time.",
+    "enabledOk": "Sign-in allowed.",
+    "disabledOk": "Sign-in blocked.",
+    "noTenants": "No tenants yet.",
+    "tenantHelp": "Tenants get their login from the invite email. Former tenants are blocked automatically 90 days after settlement."
   }
 }

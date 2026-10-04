@@ -2,7 +2,7 @@ import { getTranslations } from 'next-intl/server';
 import { MoreMenu } from '@/components/more-menu';
 import { PageHeader } from '@/components/ui/page-header';
 import { requireStaff } from '@/lib/auth';
-import { OWNER_SECONDARY } from '@/lib/nav';
+import { OWNER_GROUPS } from '@/lib/nav';
 import { unreadCount } from '@/lib/unread';
 
 export default async function OwnerMore() {
@@ -11,7 +11,7 @@ export default async function OwnerMore() {
   return (
     <>
       <PageHeader title={t('more')} />
-      <MoreMenu items={OWNER_SECONDARY} unread={await unreadCount(viewer.user.id)} />
+      <MoreMenu groups={OWNER_GROUPS} unread={await unreadCount(viewer.user.id)} />
     </>
   );
 }

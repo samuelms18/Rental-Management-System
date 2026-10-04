@@ -2,7 +2,7 @@ import { getTranslations } from 'next-intl/server';
 import { MoreMenu } from '@/components/more-menu';
 import { PageHeader } from '@/components/ui/page-header';
 import { requireTenant } from '@/lib/auth';
-import { TENANT_SECONDARY } from '@/lib/nav';
+import { TENANT_GROUPS } from '@/lib/nav';
 
 export default async function TenantMore() {
   await requireTenant();
@@ -10,7 +10,7 @@ export default async function TenantMore() {
   return (
     <>
       <PageHeader title={t('more')} />
-      <MoreMenu items={TENANT_SECONDARY} />
+      <MoreMenu groups={TENANT_GROUPS} />
     </>
   );
 }

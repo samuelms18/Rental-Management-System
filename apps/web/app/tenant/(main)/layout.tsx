@@ -1,6 +1,6 @@
 import { AppShell } from '@/components/app-shell';
 import { requireTenant } from '@/lib/auth';
-import { TENANT_PRIMARY, TENANT_SECONDARY } from '@/lib/nav';
+import { TENANT_GROUPS, TENANT_PRIMARY } from '@/lib/nav';
 import { unreadCount } from '@/lib/unread';
 
 export default async function TenantLayout({ children }: { children: React.ReactNode }) {
@@ -8,7 +8,7 @@ export default async function TenantLayout({ children }: { children: React.React
   return (
     <AppShell
       primary={TENANT_PRIMARY}
-      secondary={TENANT_SECONDARY}
+      groups={TENANT_GROUPS}
       unread={await unreadCount(viewer.user.id)}
       viewer={{ name: viewer.tenant?.full_name ?? viewer.profile.full_name ?? '', role: 'tenant', profileHref: '/tenant/profile' }}
     >

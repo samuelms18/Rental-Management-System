@@ -1,7 +1,7 @@
 'use server';
 
 import { revalidatePath } from 'next/cache';
-import { memberInviteSchema, memberRemoveSchema, memberRoleSchema, parseForm } from '@fpm/validation';
+import { loginAccessSchema, memberInviteSchema, memberRemoveSchema, memberRoleSchema, parseForm } from '@fpm/validation';
 import { createClient } from '@/lib/supabase/server';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { requireStaff } from '@/lib/auth';
@@ -59,4 +59,33 @@ export async function inviteMember(_: ActionState, form: FormData): Promise<Acti
   if (mErr) return dbError(mErr);
   revalidatePath('/owner/team');
   return { ok: true, message: existing ? 'team.added' : 'team.invited' };
+}
+
+/** Owner only: block or unblock someone's sign-in (a team member or a tenant the owner can see). Never yourself. */
+export async function setLoginAccess(_: ActionState, form: FormData): Promise<ActionState> {
+  const parsed = parseForm(loginAccessSchema, form);
+  if (!parsed.ok) return { errors: parsed.errors };
+  const { supabase, user, isOwner } = await requireStaff();
+  if (!isOwner) return { errors: { _form: 'not_allowed' } };
+  const target = parsed.data.user_id;
+  if (target === user.id) return { errors: { _form: 'remove_self' } };
+  // Only people this owner can see through RLS: their team, or tenants of their properties.
+  const [{ count: inTeam }, { count: isTenant }] = await Promise.all([
+    supabase.from('property_members').select('user_id', { count: 'exact', head: true }).eq('user_id', target),
+    supabase.from('tenants').select('id', { count: 'exact', head: true }).eq('user_id', target),
+  ]);
+  if (!inTeam && !isTenant) return { errors: { _form: 'not_allowed' } };
+  const admin = createAdminClient();
+  const { error } = await admin
+    .from('profiles')
+    .update({ disabled_at: parsed.data.enabled === 'true' ? null : new Date().toISOString() })
+    .eq('id', target);
+  if (error) return dbError(error);
+  await supabase.rpc('log_action', {
+    p_action: parsed.data.enabled === 'true' ? 'login_enabled' : 'login_disabled',
+    p_table: 'profiles',
+    p_record_id: target,
+  });
+  revalidatePath('/owner/team');
+  return { ok: true, message: parsed.data.enabled === 'true' ? 'users.enabledOk' : 'users.disabledOk' };
 }

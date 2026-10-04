@@ -95,6 +95,10 @@ supabase/seed/             seed.sql with fake data only
 - Reminders pause for a charge while a payment for it waits for approval.
 - Roles: owners change roles / remove people via `set_member_role` / `remove_member` (Team page); a deferred trigger
   keeps at least one owner per property. The header shows the signed-in name and role.
+- Users & roles page (`/owner/team`): team roles, invites, and owner-only block/allow sign-in (`profiles.disabled_at`) for
+  team members and tenants. Menus are grouped (`OWNER_GROUPS` / `TENANT_GROUPS` in `lib/nav.ts`; "Masters" first).
+- Splash ("Saravanan & Thulasi Home", once per session via an inline script) and the drifting background live in the
+  root layout; `loading.tsx` shows the branded preloader between pages.
 - EB: one meter per house, bimonthly (TNEB). Bills entered manually by a manager.
   `paid_by`: 'tenant_direct' | 'owner_reimbursed' (owner pays → reimbursement charge for tenant).
 - Former tenant ID documents (and guest IDs) deleted 12 months after settlement.

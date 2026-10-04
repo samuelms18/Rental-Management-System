@@ -1,11 +1,12 @@
 'use client';
 
 import Link from 'next/link';
+import { useState } from 'react';
 import { usePathname } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import {
   Bell, Building2, ClipboardList, CreditCard, FileText, Home, IndianRupee, LayoutGrid, MessageCircle,
-  Receipt, Search, Settings, ShieldCheck, Users, Wrench, Zap, CheckCircle2, User,
+  Receipt, Search, Settings, ShieldCheck, Users, Wrench, Zap, CheckCircle2, User, ChevronDown,
 } from 'lucide-react';
 import { cn } from '@/components/ui/cn';
 
@@ -87,5 +88,45 @@ export function NavLinks({ items, variant, unread }: { items: NavItem[]; variant
         );
       })}
     </ul>
+  );
+}
+
+/** Sidebar: main items, then collapsible groups (a group opens when it holds the current page). */
+export function GroupedNav({
+  primary,
+  groups,
+  unread,
+}: {
+  primary: NavItem[];
+  groups: Array<{ label: string; items: NavItem[] }>;
+  unread?: number;
+}) {
+  const pathname = usePathname();
+  const t = useTranslations('navGroups');
+  const holdsActive = (items: NavItem[]) => items.some((i) => pathname === i.href || pathname.startsWith(`${i.href}/`));
+  const [open, setOpen] = useState<Record<string, boolean>>(() =>
+    Object.fromEntries(groups.map((g, n) => [g.label, n === 0 || holdsActive(g.items)])),
+  );
+  return (
+    <div className="space-y-4">
+      <NavLinks items={primary} variant="sidebar" unread={unread} />
+      {groups.map((g) => {
+        const isOpen = open[g.label] || holdsActive(g.items);
+        return (
+          <div key={g.label}>
+            <button
+              type="button"
+              aria-expanded={isOpen}
+              onClick={() => setOpen((o) => ({ ...o, [g.label]: !isOpen }))}
+              className="flex min-h-9 w-full items-center justify-between rounded-lg px-3 text-xs font-bold uppercase tracking-[0.08em] text-muted hover:text-fg"
+            >
+              {t(g.label)}
+              <ChevronDown className={cn('size-4 transition-transform', isOpen && 'rotate-180')} />
+            </button>
+            {isOpen && <NavLinks items={g.items} variant="sidebar" unread={unread} />}
+          </div>
+        );
+      })}
+    </div>
   );
 }
