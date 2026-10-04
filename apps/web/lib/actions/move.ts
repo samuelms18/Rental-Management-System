@@ -136,9 +136,17 @@ export async function saveMoveOut(_: ActionState, form: FormData): Promise<Actio
     { onConflict: 'tenancy_id' },
   );
   if (error) return dbError(error);
-  // Notice on the tenancy too (pro-rates the last month's rent if unpaid).
-  if (tenancy.status === 'active') {
-    await supabase.from('tenancies').update({ status: 'notice_period', actual_end_date: d.move_out_date }).eq('id', tenancy.id);
+  // Keep the tenancy's notice in step: planned move-out date, and "notice given on" overrides the recorded date.
+  // Rent then runs to the later of the move-out date and the end of the notice period (database rule).
+  if (tenancy.status === 'active' || tenancy.status === 'notice_period') {
+    await supabase
+      .from('tenancies')
+      .update({
+        status: 'notice_period',
+        actual_end_date: d.move_out_date,
+        ...(d.notice_date ? { notice_date: d.notice_date } : {}),
+      })
+      .eq('id', tenancy.id);
   }
   refresh(tenancy.id);
   return { ok: true, message: 'common.saved' };

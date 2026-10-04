@@ -1,12 +1,11 @@
 import type { Metadata, Viewport } from 'next';
 import { NextIntlClientProvider } from 'next-intl';
 import { getLocale, getTranslations } from 'next-intl/server';
-import { Fraunces, Hanken_Grotesk, Noto_Sans_Devanagari, Noto_Sans_Malayalam, Noto_Sans_Tamil } from 'next/font/google';
+import { Noto_Sans_Devanagari, Noto_Sans_Malayalam, Noto_Sans_Tamil, Plus_Jakarta_Sans } from 'next/font/google';
 import { ServiceWorker } from '@/components/service-worker';
 import './globals.css';
 
-const latin = Hanken_Grotesk({ subsets: ['latin'], variable: '--font-latin', display: 'swap' });
-const display = Fraunces({ subsets: ['latin'], variable: '--font-display-latin', display: 'swap', axes: ['opsz', 'SOFT'] });
+const latin = Plus_Jakarta_Sans({ subsets: ['latin'], variable: '--font-latin', display: 'swap' });
 const tamil = Noto_Sans_Tamil({ subsets: ['tamil'], variable: '--font-tamil', display: 'swap' });
 const deva = Noto_Sans_Devanagari({ subsets: ['devanagari'], variable: '--font-devanagari', display: 'swap' });
 const mal = Noto_Sans_Malayalam({ subsets: ['malayalam'], variable: '--font-malayalam', display: 'swap' });
@@ -25,8 +24,8 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export const viewport: Viewport = {
   themeColor: [
-    { media: '(prefers-color-scheme: light)', color: '#0f4c45' },
-    { media: '(prefers-color-scheme: dark)', color: '#0f1312' },
+    { media: '(prefers-color-scheme: light)', color: '#ffffff' },
+    { media: '(prefers-color-scheme: dark)', color: '#121212' },
   ],
   width: 'device-width',
   initialScale: 1,
@@ -36,7 +35,7 @@ export const viewport: Viewport = {
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const locale = await getLocale();
   return (
-    <html lang={locale} className={`${latin.variable} ${display.variable} ${tamil.variable} ${deva.variable} ${mal.variable}`}>
+    <html lang={locale} className={`${latin.variable} ${tamil.variable} ${deva.variable} ${mal.variable}`}>
       <body className="min-h-dvh antialiased">
         <NextIntlClientProvider>{children}</NextIntlClientProvider>
         <ServiceWorker />

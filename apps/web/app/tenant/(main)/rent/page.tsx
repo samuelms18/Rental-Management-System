@@ -1,7 +1,7 @@
 import { getLocale, getTranslations } from 'next-intl/server';
-import { formatDate, formatMonth, paiseToRupeesInput } from '@fpm/api';
+import { formatDate, formatINR, formatMonth, paiseToRupeesInput } from '@fpm/api';
 import { LinkButton } from '@/components/ui/button';
-import { Card, Empty, List, Section } from '@/components/ui/card';
+import { Card, Empty, Hero, List, Section } from '@/components/ui/card';
 import { Money } from '@/components/ui/money';
 import { PageHeader } from '@/components/ui/page-header';
 import { ChargeRow } from '@/components/charge-row';
@@ -17,22 +17,33 @@ export default async function TenantRent() {
   const locale = await getLocale();
   if (!tenancy) return <Empty>{t('tenantHome.noTenancy')}</Empty>;
   const dues = (await openCharges(supabase, tenancy.id)).filter((c) => c.type !== 'eb');
-  const { data: payee } = await supabase.from('payee_settings').select('*').eq('property_id', tenancy.houses?.property_id ?? '').maybeSingle();
+  const [{ data: payee }, { data: waitingRows }] = await Promise.all([
+    supabase.from('payee_settings').select('*').eq('property_id', tenancy.houses?.property_id ?? '').maybeSingle(),
+    supabase.from('payments').select('amount_paise').eq('tenancy_id', tenancy.id).eq('status', 'submitted').neq('paid_to', 'tneb'),
+  ]);
   const total = dues.reduce((n, c) => n + c.outstanding_paise, 0);
+  // Payments waiting for approval are not owed twice: the UPI link and the form only ask for the balance.
+  const waiting = (waitingRows ?? []).reduce((n, p) => n + p.amount_paise, 0);
+  const balance = Math.max(total - waiting, 0);
   const qr = fileUrl('payee', payee?.qr_path);
   const upiLink = payee
-    ? `upi://pay?pa=${encodeURIComponent(payee.upi_id)}&pn=${encodeURIComponent(payee.payee_name)}&am=${paiseToRupeesInput(total)}&cu=INR&tn=${encodeURIComponent(`Rent ${tenancy.code}`)}`
+    ? `upi://pay?pa=${encodeURIComponent(payee.upi_id)}&pn=${encodeURIComponent(payee.payee_name)}&am=${paiseToRupeesInput(balance)}&cu=INR&tn=${encodeURIComponent(`Rent ${tenancy.code}`)}`
     : null;
 
   return (
     <>
       <PageHeader title={t('pay.title')} />
-      <div className="space-y-6">
-        <Card className="space-y-2 text-center">
-          <div className="text-sm text-muted">{t('pay.amountDue')}</div>
-          <div className="text-4xl font-semibold"><Money paise={total} /></div>
-          {dues[0] && <div className="text-sm text-muted">{t('pay.dueOn', { date: formatDate(dues[0].due_date, locale) })}</div>}
-        </Card>
+      <div className="space-y-8">
+        <Hero className="space-y-2">
+          <div className="text-sm font-semibold opacity-90">{t('pay.amountDue')}</div>
+          <div className="tabular text-[44px] font-extrabold leading-none tracking-[-0.02em]"><Money paise={total} /></div>
+          {dues[0] && <div className="text-sm opacity-90">{t('pay.dueOn', { date: formatDate(dues[0].due_date, locale) })}</div>}
+          {waiting > 0 && (
+            <div className="mt-3 rounded-xl bg-white/95 px-4 py-3 text-sm font-medium text-[#222]">
+              {balance > 0 ? t('tenantHome.waitingPartial', { amount: formatINR(waiting) }) : t('tenantHome.waiting', { amount: formatINR(waiting) })}
+            </div>
+          )}
+        </Hero>
 
         {total === 0 ? (
           <Empty>{t('pay.nothingDue')}</Empty>
@@ -40,30 +51,44 @@ export default async function TenantRent() {
           <Empty>{t('rent.payeeMissing')}</Empty>
         ) : (
           <>
-            <Card className="space-y-4 text-center">
-              <p className="text-sm">{t('pay.scan')}</p>
+            {/* Step 1 disappears while everything owed is already waiting for approval; step 2 stays so its confirmation shows. */}
+            {balance > 0 && <section className="space-y-4">
+              <h2 className="flex items-center gap-2.5 text-lg font-bold">
+                <span className="flex size-7 items-center justify-center rounded-full bg-fg text-sm text-bg">1</span>
+                {t('pay.step1')}
+              </h2>
+              <p className="text-sm text-muted">{t('pay.scan')}</p>
               {qr && (
                 // eslint-disable-next-line @next/next/no-img-element
-                <img src={qr} alt={t('payee.qr')} className="mx-auto size-64 rounded-xl border border-border bg-white object-contain p-2" />
+                <img src={qr} alt={t('payee.qr')} className="mx-auto size-56 rounded-2xl border border-border bg-white object-contain p-3 shadow-card" />
               )}
-              <div className="text-sm text-muted">{t('pay.payTo')}: <span className="font-medium text-fg">{payee.payee_name}</span></div>
-              <div className="flex items-center justify-center gap-2">
-                <span className="font-mono text-sm">{payee.upi_id}</span>
-                <CopyButton text={payee.upi_id} />
-              </div>
+              <Card className="space-y-1 text-center">
+                <div className="text-sm text-muted">{t('pay.payTo')}:</div>
+                <div className="font-bold">{payee.payee_name}</div>
+                <div className="flex items-center justify-center gap-2">
+                  <span className="font-mono text-sm">{payee.upi_id}</span>
+                  <CopyButton text={payee.upi_id} />
+                </div>
+              </Card>
               {upiLink && <LinkButton href={upiLink} external variant="secondary" className="w-full sm:hidden">{t('pay.openUpi')}</LinkButton>}
-            </Card>
-            <Card>
-              <h2 className="mb-3 font-semibold">{t('pay.afterPaying')}</h2>
-              <PayForm
-                tenancyId={tenancy.id}
-                charges={dues.map((c) => ({
-                  id: c.id,
-                  outstanding_paise: c.outstanding_paise,
-                  label: `${t(`labels.chargeType.${c.type}`)} · ${formatMonth(c.period_start, locale)} · ${new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }).format(c.outstanding_paise / 100)}`,
-                }))}
-              />
-            </Card>
+            </section>}
+            <section className="space-y-4">
+              <h2 className="flex items-center gap-2.5 text-lg font-bold">
+                <span className="flex size-7 items-center justify-center rounded-full bg-fg text-sm text-bg">2</span>
+                {t('pay.step2')}
+              </h2>
+              <Card>
+                <PayForm
+                  tenancyId={tenancy.id}
+                  defaultAmountPaise={Math.min(balance, dues[0]?.outstanding_paise ?? balance)}
+                  charges={dues.map((c) => ({
+                    id: c.id,
+                    outstanding_paise: c.outstanding_paise,
+                    label: `${t(`labels.chargeType.${c.type}`)} · ${formatMonth(c.period_start, locale)} · ${formatINR(c.outstanding_paise)}`,
+                  }))}
+                />
+              </Card>
+            </section>
           </>
         )}
 

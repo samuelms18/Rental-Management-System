@@ -24,7 +24,9 @@ test.beforeAll(async ({ browser }) => {
 
 test('manager signs in with 2FA and sees the dashboard', async () => {
   await signInStaff(manager, 'samuel@example.com');
-  await expect(manager.getByRole('heading', { name: 'What needs attention today' })).toBeVisible();
+  await expect(manager.getByRole('heading', { name: 'Hello, Samuel' })).toBeVisible();
+  await expect(manager.getByText('What needs attention today')).toBeVisible();
+  await expect(manager.getByRole('link', { name: /Samuel.*Manager/ })).toBeVisible();
   await manager.screenshot({ path: `${shots}/01-owner-dashboard.png`, fullPage: true });
 });
 
@@ -59,6 +61,7 @@ test('manager adds a tenant (invite email goes out) and a tenancy for H03', asyn
   await manager.locator('input[name=agreement]').setInputFiles({ name: 'agreement.pdf', mimeType: 'application/pdf', buffer: Buffer.from(await pdf.save()) });
   await manager.getByRole('button', { name: 'Activate tenancy' }).click();
   await expect(manager.getByText('Active', { exact: true })).toBeVisible();
+  await manager.getByRole('link', { name: 'Rent & payments' }).click();
   await expect(manager.getByText('first month')).toBeVisible();
   await manager.screenshot({ path: `${shots}/02-tenancy.png`, fullPage: true });
 });

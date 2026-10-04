@@ -1,6 +1,6 @@
 -- Phase 4: rent generation, payments, approvals, allocations, receipts, EB, reminders, storage.
 begin;
-select plan(32);
+select plan(33);
 select tests.seed_world();
 
 -- ---------- Rent generation (run as the job does: postgres, fixed dates) ----------
@@ -126,8 +126,13 @@ select is((select amount_paise from public.charges where type = 'eb_reimbursemen
 select tests.logout();
 
 -- ---------- Reminders ----------
+select is((select count(*)::int from public.reminders_due('2026-01-03') where tenancy_id = tests.w('tyb')), 0,
+  'reminders pause while a payment is waiting for approval');
+select tests.login(tests.w('m1'), 'aal2');
+select public.reject_payment((select id from public.payments where utr_reference = 'UTR000000777' and status = 'submitted'), 'Wrong amount');
+select tests.logout();
 select is((select count(*)::int from public.reminders_due('2026-01-03') where tenancy_id = tests.w('tyb')), 1,
-  '2 days before the due date is a reminder day');
+  '2 days before the due date is a reminder day (resumes after the payment is rejected)');
 
 -- ---------- Over-allocation guard (database level) ----------
 select throws_ok(

@@ -952,13 +952,13 @@ isOneToOne: false
                   ]
                 },"tenancies": {
                   Row: {
-                    "activated_at": string | null,"actual_end_date": string | null,"advance_paise": number,"code": string,"created_at": string,"expected_end_date": string | null,"house_id": string,"id": string,"notice_period_days": number,"offline_agreement_path": string | null,"rent_due_day": number,"start_date": string,"status": string,"tenant_id": string
+                    "activated_at": string | null,"actual_end_date": string | null,"advance_paise": number,"code": string,"created_at": string,"expected_end_date": string | null,"house_id": string,"id": string,"notice_date": string | null,"notice_period_days": number,"offline_agreement_path": string | null,"rent_due_day": number,"start_date": string,"status": string,"tenant_id": string
                   }
                   Insert: {
-                    "activated_at"?: string | null,"actual_end_date"?: string | null,"advance_paise"?: number,"code"?: string,"created_at"?: string,"expected_end_date"?: string | null,"house_id": string,"id"?: string,"notice_period_days"?: number,"offline_agreement_path"?: string | null,"rent_due_day"?: number,"start_date": string,"status"?: string,"tenant_id": string
+                    "activated_at"?: string | null,"actual_end_date"?: string | null,"advance_paise"?: number,"code"?: string,"created_at"?: string,"expected_end_date"?: string | null,"house_id": string,"id"?: string,"notice_date"?: string | null,"notice_period_days"?: number,"offline_agreement_path"?: string | null,"rent_due_day"?: number,"start_date": string,"status"?: string,"tenant_id": string
                   }
                   Update: {
-                    "activated_at"?: string | null,"actual_end_date"?: string | null,"advance_paise"?: number,"code"?: string,"created_at"?: string,"expected_end_date"?: string | null,"house_id"?: string,"id"?: string,"notice_period_days"?: number,"offline_agreement_path"?: string | null,"rent_due_day"?: number,"start_date"?: string,"status"?: string,"tenant_id"?: string
+                    "activated_at"?: string | null,"actual_end_date"?: string | null,"advance_paise"?: number,"code"?: string,"created_at"?: string,"expected_end_date"?: string | null,"house_id"?: string,"id"?: string,"notice_date"?: string | null,"notice_period_days"?: number,"offline_agreement_path"?: string | null,"rent_due_day"?: number,"start_date"?: string,"status"?: string,"tenant_id"?: string
                   }
                   Relationships: [
                     {
@@ -1086,6 +1086,9 @@ isOneToOne: true
               "back_path": string,"front_path": string,"id": string
             }[]
                            },
+"ensure_rent_through":
+{ Args: { "p_tenancy_id": string }; Returns: number
+                           },
 "generate_rent_charges":
 { Args: { "p_today"?: string }; Returns: number
                            },
@@ -1203,6 +1206,9 @@ isOneToOne: true
               "amount_paise": number,"charge_id": string,"days_from_due": number,"due_date": string,"house_unit": string,"outstanding_paise": number,"property_id": string,"stage": string,"tenancy_code": string,"tenancy_id": string,"tenant_language": string,"tenant_name": string,"tenant_phone": string,"tenant_user_id": string,"type": string
             }[]
                            },
+"remove_member":
+{ Args: { "p_user_id": string }; Returns: undefined
+                           },
 "rent_for":
 { Args: { "p_on": string,"p_tenancy_id": string }; Returns: number
                            },
@@ -1252,6 +1258,9 @@ isOneToOne: true
 "set_agreement_status":
 { Args: { "p_id": string,"p_status": string }; Returns: undefined
                            },
+"set_member_role":
+{ Args: { "p_role": string,"p_user_id": string }; Returns: undefined
+                           },
 "set_receipt_pdf":
 { Args: { "p_path": string,"p_receipt_id": string }; Returns: undefined
                            },
@@ -1276,6 +1285,9 @@ isOneToOne: true
 { Args: { "p_q": string }; Returns: {
               "id": string,"kind": string,"label": string,"link": string,"sublabel": string
             }[]
+                           },
+"tenancy_billing_end":
+{ Args: { "p_tenancy_id": string }; Returns: string
                            },
 "tenancy_property_id":
 { Args: { "p_tenancy_id": string }; Returns: string

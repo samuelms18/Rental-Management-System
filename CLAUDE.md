@@ -32,7 +32,7 @@ paid e-sign, native app-store apps, any paid SaaS. If a feature seems to need a 
   Chosen over @react-pdf/renderer: smaller bundle and works on Workers. Standard PDF fonts cannot shape
   Tamil/Hindi/Malayalam, so PDF labels are English; the in-app screens are translated.
 - Cloudflare Workers free plan limits the bundle to 3 MB gzipped. Build with `next build --webpack` (Turbopack makes
-  OpenNext bundle an unused 1.4 MB image engine) and `"minify": true`. Measured 2.1 MB on 3 Oct 2026.
+  OpenNext bundle an unused 1.4 MB image engine) and `"minify": true`. Measured 2.3 MB on 4 Oct 2026.
   Check after each phase: `npx wrangler deploy --dry-run --outdir /tmp/cf`.
 - Email: Gmail SMTP with an app password, set as Supabase Auth custom SMTP and used for app alerts
   (free, ~500/day). Not Resend: its free tier needs a paid custom domain to email tenants.
@@ -87,6 +87,14 @@ supabase/seed/             seed.sql with fake data only
 - Reminders: 5 days before, 2 days before, on due day, then every 3 days while overdue. Quiet hours 21:00–08:00 IST.
 - Rent is always the full monthly amount (family rule, Oct 2026): a mid-month move-in pays the full first month at move-in,
   and the move-out month is not reduced. `prorate()` exists but no charge uses it.
+- Notice rule: rent runs to `tenancy_billing_end()` = later of the move-out date and notice_date + notice days − 1.
+  Early leavers' notice months are created at settlement (`ensure_rent_through`) and taken from the advance; unpaid
+  rent for months after the billing end is auto-cancelled (`cancel_reason = 'after_billing_end'`) and restored if the
+  notice is withdrawn. `tenancies.notice_date` is set when notice is recorded, cleared on withdrawal, and overridden by
+  "Notice given on" on the move-out page.
+- Reminders pause for a charge while a payment for it waits for approval.
+- Roles: owners change roles / remove people via `set_member_role` / `remove_member` (Team page); a deferred trigger
+  keeps at least one owner per property. The header shows the signed-in name and role.
 - EB: one meter per house, bimonthly (TNEB). Bills entered manually by a manager.
   `paid_by`: 'tenant_direct' | 'owner_reimbursed' (owner pays → reimbursement charge for tenant).
 - Former tenant ID documents (and guest IDs) deleted 12 months after settlement.

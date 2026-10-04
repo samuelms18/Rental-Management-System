@@ -1,6 +1,6 @@
 import { notFound } from 'next/navigation';
 import { getLocale, getTranslations } from 'next-intl/server';
-import { formatDate, formatINR, paiseToRupeesInput, todayIST, whatsappLink } from '@fpm/api';
+import { addDays, formatDate, formatINR, formatMonth, paiseToRupeesInput, todayIST, whatsappLink } from '@fpm/api';
 import { isLocale } from '@fpm/i18n';
 import { PHOTO_AREAS } from '@fpm/validation';
 import { Badge, toneFor } from '@/components/ui/badge';
@@ -29,21 +29,43 @@ export default async function MoveOut({ params }: { params: Promise<{ id: string
   const locale = await getLocale();
   const { data: ty } = await supabase.from('tenancies').select('*, houses(id, unit_number), tenants(full_name, phone, user_id)').eq('id', id).maybeSingle();
   if (!ty || !ty.tenants || !ty.houses) notFound();
-  const [{ data: mo }, { data: photos }, { data: readings }, { data: lastBill }, settlement, dues] = await Promise.all([
+  const [{ data: mo }, { data: photos }, { data: readings }, { data: lastBill }, settlement, dues, { data: billEnd }, { data: rentRows }, { data: revisions }] = await Promise.all([
     supabase.from('move_out_records').select('*').eq('tenancy_id', id).maybeSingle(),
     supabase.from('tenancy_photos').select('area, path, stage').eq('tenancy_id', id),
     supabase.from('meter_readings').select('id, reading, read_on, stage').eq('house_id', ty.houses.id).order('read_on').order('created_at'),
     supabase.from('eb_bills').select('amount_paise, units').eq('house_id', ty.houses.id).not('units', 'is', null).gt('units', 0).order('period_end', { ascending: false }).limit(1).maybeSingle(),
     settlementLines(supabase, id),
     openCharges(supabase, id),
+    supabase.rpc('tenancy_billing_end', { p_tenancy_id: id }),
+    supabase.from('charges').select('period_start').eq('tenancy_id', id).eq('type', 'rent'),
+    supabase.from('rent_revisions').select('amount_paise, effective_from').eq('tenancy_id', id).order('effective_from', { ascending: false }),
   ]);
+  // Notice rule: rent runs to the later of the move-out date and the end of the notice period.
+  const noticeDate = mo?.notice_date ?? ty.notice_date;
+  const noticeEnd = noticeDate ? addDays(noticeDate, ty.notice_period_days - 1) : null;
+  const moveOutDate = mo?.move_out_date ?? ty.actual_end_date;
+  const earlyDays = noticeEnd && moveOutDate && moveOutDate < noticeEnd ? Math.round((Date.parse(noticeEnd) - Date.parse(moveOutDate)) / 86_400_000) : 0;
+  // Notice-period months that are not billed yet; they are created and taken from the advance when the statement is shared.
+  const billed = new Set((rentRows ?? []).map((r) => r.period_start));
+  const rentNow = revisions?.find((r) => r.effective_from <= todayIST())?.amount_paise ?? revisions?.at(-1)?.amount_paise ?? 0;
+  const futureMonths: string[] = [];
+  if (billEnd && (!mo || mo.status === 'draft')) {
+    let m = todayIST().slice(0, 7) + '-01';
+    const startNext = addDays(ty.start_date.slice(0, 7) + '-01', 32).slice(0, 7) + '-01';
+    if (m < startNext) m = startNext;
+    while (m <= billEnd) {
+      if (!billed.has(m)) futureMonths.push(m);
+      m = addDays(m, 32).slice(0, 7) + '-01';
+    }
+  }
   const draft = !mo || mo.status === 'draft';
   const outReading = (readings ?? []).filter((r) => r.stage === 'move_out').at(-1);
   const prevReading = outReading ? (readings ?? []).filter((r) => r.id !== outReading.id && r.read_on <= outReading.read_on).at(-1) : undefined;
   const units = outReading && prevReading ? Number(outReading.reading) - Number(prevReading.reading) : null;
   const rate = lastBill ? Math.round(lastBill.amount_paise / Number(lastBill.units)) : null;
   const suggestedEb = units != null && rate != null ? Math.round((units * rate) / 100) * 100 : null;
-  const outstanding = dues.reduce((n, c) => n + c.outstanding_paise, 0) + (draft ? (mo?.final_eb_paise ?? 0) : 0);
+  const outstanding =
+    dues.reduce((n, c) => n + c.outstanding_paise, 0) + (draft ? (mo?.final_eb_paise ?? 0) + futureMonths.length * rentNow : 0);
   const projected = draft ? Math.max(settlement.balance - outstanding, 0) : Math.max(settlement.balance, 0);
   const hasReceived = settlement.lines.some((l) => l.type === 'received');
 
@@ -62,12 +84,21 @@ export default async function MoveOut({ params }: { params: Promise<{ id: string
         back={`/owner/tenancies/${id}`}
       />
       <div className="space-y-7">
+        {noticeEnd && (
+          <Section title={t('moveOut.noticeSummary')}>
+            <div className={earlyDays > 0 ? 'space-y-1.5 rounded-card border border-warn/30 bg-warn-soft p-4 text-warn' : 'space-y-1.5 rounded-card border border-border p-4'}>
+              <div className="font-bold">{t('moveOut.noticeEnds', { date: formatDate(noticeEnd, locale) })}</div>
+              {billEnd && <div className="text-sm">{t('moveOut.rentUntil', { date: formatDate(billEnd, locale) })}</div>}
+              {earlyDays > 0 && <div className="text-sm font-medium">{t('moveOut.leavingEarly', { count: earlyDays })}</div>}
+            </div>
+          </Section>
+        )}
         <Section title={t('moveOut.details')}>
           <Card>
             <ActionForm action={saveMoveOut} hidden={{ tenancy_id: id }}>
               <div className="grid grid-cols-2 gap-3">
                 <Field name="notice_date" label={t('moveOut.noticeDate')} optional>
-                  <Input name="notice_date" type="date" defaultValue={mo?.notice_date ?? ''} disabled={!draft} />
+                  <Input name="notice_date" type="date" defaultValue={mo?.notice_date ?? ty.notice_date ?? ''} disabled={!draft} />
                 </Field>
                 <Field name="move_out_date" label={t('tenancy.moveOutDate')}>
                   <Input name="move_out_date" type="date" defaultValue={mo?.move_out_date ?? ty.actual_end_date ?? todayIST()} disabled={!draft} />
@@ -144,6 +175,11 @@ export default async function MoveOut({ params }: { params: Promise<{ id: string
             {draft && dues.map((c) => (
               <ListRow key={c.id} right={<span className="text-danger">−<Money paise={c.outstanding_paise} /></span>}>
                 <div className="text-sm text-muted">{t('moveOut.willOffset')}: {t(`labels.chargeType.${c.type}`)} · {formatDate(c.period_start, locale)}</div>
+              </ListRow>
+            ))}
+            {draft && futureMonths.map((m) => (
+              <ListRow key={m} right={<span className="text-danger">−<Money paise={rentNow} /></span>}>
+                <div className="text-sm text-muted">{t('moveOut.willOffset')}: {t('labels.chargeType.rent')} · {formatMonth(m, locale)} ({t('moveOut.noticeMonth')})</div>
               </ListRow>
             ))}
             {draft && (mo?.final_eb_paise ?? 0) > 0 && (

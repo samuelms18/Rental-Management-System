@@ -21,6 +21,7 @@ export const OWNER_SECONDARY: NavItem[] = [
   { href: '/owner/activity', label: 'activity', icon: 'list' },
   { href: '/owner/search', label: 'search', icon: 'search' },
   { href: '/owner/notifications', label: 'notifications', icon: 'bell', badge: 'unread' },
+  { href: '/owner/team', label: 'team', icon: 'shield' },
   { href: '/owner/profile', label: 'profile', icon: 'user' },
 ];
 

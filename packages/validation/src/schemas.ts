@@ -248,3 +248,13 @@ export const expenseSchema = z.object({
   description: text(300),
   notes: optionalText(1000),
 });
+
+// ---------- Team (owners only) ----------
+export const teamRole = z.enum(['owner', 'manager']);
+export const memberRoleSchema = z.object({ user_id: uuid, role: teamRole });
+export const memberRemoveSchema = z.object({ user_id: uuid });
+export const memberInviteSchema = z.object({
+  full_name: text(120),
+  email: z.email('invalid_email').transform((e) => e.toLowerCase()),
+  role: teamRole,
+});

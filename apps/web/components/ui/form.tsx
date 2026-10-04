@@ -69,7 +69,7 @@ function FormMessage() {
   const formError = state.errors?._form;
   if (formError) {
     return (
-      <div role="alert" className="rounded-2xl border border-danger/20 bg-danger-soft px-4 py-3 text-sm font-medium text-danger">
+      <div role="alert" className="rounded-xl bg-danger-soft px-4 py-3 text-sm font-medium text-danger">
         {t.has(`errors.${formError}`) ? t(`errors.${formError}`) : t('errors.generic')}
         {state.detail && <div className="mt-1 text-xs opacity-80">{state.detail}</div>}
       </div>
@@ -77,7 +77,7 @@ function FormMessage() {
   }
   if (state.ok && state.message) {
     return (
-      <div role="status" className="rounded-2xl border border-ok/20 bg-ok-soft px-4 py-3 text-sm font-medium text-ok">
+      <div role="status" className="rounded-xl bg-ok-soft px-4 py-3 text-sm font-medium text-ok">
         {t(state.message, state.messageValues)}
       </div>
     );
@@ -118,7 +118,7 @@ export function Field({
 }
 
 const inputClass =
-  'block w-full min-h-12 rounded-2xl border border-border bg-surface px-4 py-2.5 text-fg shadow-[0_1px_0_rgb(0_0_0/0.02)] transition placeholder:text-muted/60 hover:border-primary/30 focus:border-primary focus:outline-none focus:ring-4 focus:ring-primary/15 aria-[invalid=true]:border-danger aria-[invalid=true]:ring-danger/15';
+  'block w-full min-h-12 rounded-xl border border-border-strong bg-surface px-4 py-2.5 text-fg placeholder:text-muted/70 focus:border-fg focus:outline-none focus:ring-1 focus:ring-fg aria-[invalid=true]:border-danger aria-[invalid=true]:ring-1 aria-[invalid=true]:ring-danger';
 
 export function Input({ name, className, ...props }: React.InputHTMLAttributes<HTMLInputElement> & { name: string }) {
   const error = useFieldError(name);

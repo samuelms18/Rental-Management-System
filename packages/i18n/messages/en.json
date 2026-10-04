@@ -78,7 +78,8 @@
     "guests": "Guests",
     "domesticHelp": "Domestic help",
     "settlement": "Settlement",
-    "reports": "Reports"
+    "reports": "Reports",
+    "team": "Team & roles"
   },
   "auth": {
     "signIn": "Sign in",
@@ -164,7 +165,10 @@
     "passwordMismatch": "Passwords do not match",
     "wrong_credentials": "Wrong email or password.",
     "signature_required": "Sign in the box, or upload a signed copy",
-    "guest_id_required": "An ID photo is required for every guest, even for one night"
+    "guest_id_required": "An ID photo is required for every guest, even for one night",
+    "last_owner": "Every property must keep at least one owner. Make someone else owner first.",
+    "remove_self": "You cannot remove yourself.",
+    "tenant_email": "This email belongs to a tenant."
   },
   "status": {
     "house": {
@@ -338,7 +342,18 @@
     "open": "Open",
     "endsOn": "Ends {date}",
     "usageWarning": "Free plan is filling up: database {db}% and file storage {storage}% used. Ask Samuel to clean up old files or plan an upgrade.",
-    "jobFailed": "A daily job failed in the last 2 days: {jobs}. Check Supabase → scheduled_job_runs."
+    "jobFailed": "A daily job failed in the last 2 days: {jobs}. Check Supabase → scheduled_job_runs.",
+    "greeting": "Hello, {name}",
+    "olderUnpaid": "Older unpaid rent",
+    "yourHouses": "Your houses",
+    "noTenant": "No tenant",
+    "amountDue": "{amount} due",
+    "allPaidShort": "All paid",
+    "chipApprove": "Approve payments",
+    "chipRentBoard": "Rent board",
+    "chipRemind": "Send reminders",
+    "chipEb": "Add EB bill",
+    "chipNewTenancy": "New tenancy"
   },
   "properties": {
     "title": "Properties",
@@ -450,7 +465,16 @@
     "occupants": "Occupants",
     "documents": "Documents",
     "consentMissing": "Tenant has not accepted the privacy notice yet. Documents can be uploaded after that.",
-    "firstMonthNote": "The first month is charged in full from the start date."
+    "firstMonthNote": "The first month is charged in full from the start date.",
+    "tabs": "Tenancy sections",
+    "tabOverview": "Overview",
+    "tabMoney": "Rent & payments",
+    "tabPeople": "People",
+    "tabDocuments": "Documents",
+    "outstanding": "Outstanding",
+    "receivedCash": "Received cash?",
+    "plannedMoveOut": "Planned move-out date",
+    "noticeHint": "Rent continues until the notice period ends ({days} days from today). If the tenant leaves earlier, that rent is taken from the advance."
   },
   "occupants": {
     "title": "Occupants",
@@ -535,7 +559,9 @@
     "history": "Payment history",
     "noPayments": "No payments yet.",
     "receipt": "Receipt",
-    "rejectedReason": "Rejected: {reason}"
+    "rejectedReason": "Rejected: {reason}",
+    "step1": "Pay with any UPI app",
+    "step2": "Tell us you have paid"
   },
   "approvals": {
     "title": "Payment approvals",
@@ -695,7 +721,19 @@
     "openComplaints": "Open complaints",
     "unread": "Unread messages",
     "house": "Your house",
-    "notice": "Notice period — move-out on {date}"
+    "notice": "Notice period — move-out on {date}",
+    "waiting": "You sent {amount}. Waiting for the owner to approve it — no need to pay again.",
+    "waitingPartial": "You sent {amount}, waiting for approval. Only pay what is still due.",
+    "payBalance": "Pay the balance",
+    "dueEvery": "Due on day {day} of every month",
+    "advancePaid": "Advance paid",
+    "livingSince": "Living here since",
+    "tilePay": "Pay rent",
+    "tileProblem": "Report a problem",
+    "tileEb": "EB bill",
+    "tileAgreement": "Agreement",
+    "recentPayments": "Recent payments",
+    "seeAll": "See all"
   },
   "whatsapp": {
     "rent_upcoming": "Hello {name}, this is a reminder from {owner}. Rent of {amount} for {month} (house {house}) is due on {date}. Pay by scanning the UPI QR in the app, then submit the UTR. Thank you.",
@@ -839,7 +877,12 @@
     "dispute": "I disagree",
     "disputeNote": "What do you disagree with?",
     "refundedOn": "Refunded on {date} by {method}",
-    "formerAccess": "After moving out you can see this statement for 90 days."
+    "formerAccess": "After moving out you can see this statement for 90 days.",
+    "noticeSummary": "Notice and final rent",
+    "noticeEnds": "Notice period ends on {date}",
+    "rentUntil": "Rent is charged up to {date}.",
+    "leavingEarly": "Leaving {count, plural, one {# day} other {# days}} before the notice ends. The rent for that time stays the same and is taken from the advance.",
+    "noticeMonth": "notice period"
   },
   "guests": {
     "title": "Guests",
@@ -927,5 +970,33 @@
     "settlement": "Deposit settled",
     "repair": "Major repair",
     "meterTitle": "Electricity units between readings"
+  },
+  "roles": {
+    "owner": "Owner",
+    "manager": "Manager",
+    "tenant": "Tenant"
+  },
+  "team": {
+    "title": "Team & roles",
+    "subtitle": "Who can manage the houses, and as what",
+    "people": "People",
+    "you": "you",
+    "makeOwner": "Make owner",
+    "makeManager": "Make manager",
+    "remove": "Remove",
+    "removeConfirm": "Remove {name} from the team? They will no longer see any house.",
+    "stepDown": "Step down to manager",
+    "stepDownConfirm": "Become a manager? Another owner will have to make you owner again.",
+    "rolesHelp": "Owners can do everything, including deleting records and changing roles. Managers do the day-to-day work. Every property always keeps at least one owner.",
+    "add": "Add a person",
+    "name": "Full name",
+    "emailHint": "They get an email to set a password, then must set up two-step verification.",
+    "role": "Role",
+    "invite": "Send invite",
+    "ownerOnly": "Only an owner can change roles or add people.",
+    "roleChanged": "Role changed.",
+    "removed": "Removed from the team.",
+    "invited": "Invite sent.",
+    "added": "Added to the team."
   }
 }

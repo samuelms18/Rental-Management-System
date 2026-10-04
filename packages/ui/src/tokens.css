@@ -1,63 +1,56 @@
-/* Family Property Manager design tokens — "Chettinad modern".
-   Warm ivory paper, deep ink-teal, terracotta accent; high contrast in light and dark. */
+/* Family Property Manager design tokens — coral, airy, Airbnb-style (design file: Oct 2026).
+   #e31c5f is the primary because white text on it passes AA (4.6:1); #ff385c is only used in gradients. */
 :root {
-  --fpm-bg: #f5f1ea;
-  --fpm-surface: #fffdf9;
-  --fpm-surface-2: #efe9df;
-  --fpm-border: #e3dbcd;
-  --fpm-text: #191714;
-  --fpm-muted: #6d665a;
-  --fpm-primary: #0f4c45;
-  --fpm-primary-2: #16695f;
+  --fpm-bg: #ffffff;
+  --fpm-surface: #ffffff;
+  --fpm-surface-2: #f7f7f7;
+  --fpm-border: #ebebeb;
+  --fpm-border-strong: #b0b0b0;
+  --fpm-text: #222222;
+  --fpm-muted: #6a6a6a;
+  --fpm-primary: #e31c5f;
+  --fpm-primary-2: #ff385c;
   --fpm-primary-fg: #ffffff;
-  --fpm-primary-soft: #dfece8;
-  --fpm-accent: #c2512f;
-  --fpm-accent-soft: #f8e3da;
-  --fpm-hero-from: #0d3f3a;
-  --fpm-hero-to: #145c53;
-  --fpm-hero-text: #f6f1e7;
-  --fpm-danger: #b42318;
-  --fpm-danger-soft: #fbe9e6;
-  --fpm-warn: #9a5a06;
-  --fpm-warn-soft: #fbf0dc;
-  --fpm-ok: #1d7a3e;
-  --fpm-ok-soft: #e3f3e8;
-  --fpm-info: #1d4f91;
-  --fpm-info-soft: #e6edf9;
-  --fpm-radius: 18px;
-  --fpm-shadow: 0 1px 2px rgb(40 30 15 / 0.05), 0 6px 20px -8px rgb(40 30 15 / 0.12);
-  --fpm-shadow-lg: 0 2px 6px rgb(40 30 15 / 0.06), 0 22px 44px -18px rgb(15 76 69 / 0.38);
-  --fpm-dot: rgb(25 23 20 / 0.07);
+  --fpm-primary-soft: #fff0f3;
+  --fpm-hero-from: #e31c5f;
+  --fpm-hero-to: #bd1e59;
+  --fpm-hero-text: #ffffff;
+  --fpm-btn-gradient: linear-gradient(to right, #e61e4d 0%, #e31c5f 50%, #d70466 100%);
+  --fpm-danger: #c13515;
+  --fpm-danger-soft: #fef0ec;
+  --fpm-warn: #a35200;
+  --fpm-warn-soft: #fff6e6;
+  --fpm-ok: #008a05;
+  --fpm-ok-soft: #e8f6e9;
+  --fpm-info: #2e5ab8;
+  --fpm-info-soft: #edf2fc;
+  --fpm-radius: 16px;
+  --fpm-shadow: 0 1px 2px rgb(0 0 0 / 0.06), 0 2px 8px rgb(0 0 0 / 0.04);
+  --fpm-shadow-lg: 0 6px 20px rgb(0 0 0 / 0.12);
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --fpm-bg: #0f1312;
-    --fpm-surface: #161b1a;
-    --fpm-surface-2: #1e2523;
-    --fpm-border: #2a3331;
-    --fpm-text: #f1ece2;
-    --fpm-muted: #a39d90;
-    --fpm-primary: #5fc2ae;
-    --fpm-primary-2: #7fd3c1;
-    --fpm-primary-fg: #06201c;
-    --fpm-primary-soft: #17312c;
-    --fpm-accent: #ec8a64;
-    --fpm-accent-soft: #3a2119;
-    --fpm-hero-from: #123d38;
-    --fpm-hero-to: #0c2a27;
-    --fpm-hero-text: #f1ece2;
-    --fpm-danger: #f97066;
-    --fpm-danger-soft: #3a1714;
-    --fpm-warn: #f5b34a;
+    --fpm-bg: #121212;
+    --fpm-surface: #1c1c1c;
+    --fpm-surface-2: #262626;
+    --fpm-border: #333333;
+    --fpm-border-strong: #5c5c5c;
+    --fpm-text: #f7f7f7;
+    --fpm-muted: #b0b0b0;
+    --fpm-primary: #ff5a7a;
+    --fpm-primary-soft: #3a1520;
+    --fpm-hero-to: #a3164c;
+    --fpm-danger: #ff8a70;
+    --fpm-danger-soft: #3a1a12;
+    --fpm-warn: #ffb547;
     --fpm-warn-soft: #36270f;
-    --fpm-ok: #6ccf8b;
-    --fpm-ok-soft: #16301f;
-    --fpm-info: #84adf0;
+    --fpm-ok: #5fd068;
+    --fpm-ok-soft: #14301a;
+    --fpm-info: #8fb0f5;
     --fpm-info-soft: #172640;
-    --fpm-shadow: 0 1px 2px rgb(0 0 0 / 0.4), 0 8px 24px -12px rgb(0 0 0 / 0.6);
-    --fpm-shadow-lg: 0 2px 6px rgb(0 0 0 / 0.4), 0 22px 44px -18px rgb(0 0 0 / 0.75);
-    --fpm-dot: rgb(241 236 226 / 0.06);
+    --fpm-shadow: 0 1px 2px rgb(0 0 0 / 0.5), 0 2px 8px rgb(0 0 0 / 0.35);
+    --fpm-shadow-lg: 0 6px 20px rgb(0 0 0 / 0.6);
   }
 }
 
@@ -65,12 +58,12 @@
 :root {
   --fpm-series-1: #2a78d6;
   --fpm-series-2: #eb6834;
-  --fpm-grid: #e6e0d5;
+  --fpm-grid: #ebebeb;
 }
 @media (prefers-color-scheme: dark) {
   :root {
     --fpm-series-1: #3987e5;
     --fpm-series-2: #d95926;
-    --fpm-grid: #2a3331;
+    --fpm-grid: #333333;
   }
 }

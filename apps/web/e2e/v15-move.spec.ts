@@ -7,9 +7,12 @@ test.describe.configure({ mode: 'serial' });
 const T = '40000000-0000-4000-a000-000000000002';
 let manager: Page;
 let tenant: Page;
-// Family rule: the last month's ₹15,000 rent is charged in full, whatever the move-out day.
+// Family rules: rent is always the full ₹15,000 month, and it runs to the end of the 30-day notice period
+// (notice recorded today) even though Priya moves out today — so next month's rent is also taken from the advance.
 const today = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Kolkata' }).format(new Date());
-const finalRent = 15000;
+const noticeEnd = new Date(`${today}T00:00:00Z`);
+noticeEnd.setUTCDate(noticeEnd.getUTCDate() + 29);
+const finalRent = noticeEnd.toISOString().slice(0, 7) === today.slice(0, 7) ? 15000 : 30000;
 const refund = `₹${(80000 - 3000 - finalRent).toLocaleString('en-IN')}`;
 
 test.beforeAll(async ({ browser }) => {

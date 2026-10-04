@@ -6,7 +6,12 @@ import { unreadCount } from '@/lib/unread';
 export default async function OwnerLayout({ children }: { children: React.ReactNode }) {
   const viewer = await requireStaff();
   return (
-    <AppShell primary={OWNER_PRIMARY} secondary={OWNER_SECONDARY} unread={await unreadCount(viewer.user.id)}>
+    <AppShell
+      primary={OWNER_PRIMARY}
+      secondary={OWNER_SECONDARY}
+      unread={await unreadCount(viewer.user.id)}
+      viewer={{ name: viewer.profile.full_name || viewer.user.email || '', role: viewer.isOwner ? 'owner' : 'manager', profileHref: '/owner/profile' }}
+    >
       {children}
     </AppShell>
   );
